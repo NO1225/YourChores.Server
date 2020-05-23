@@ -20,10 +20,6 @@ namespace YourChores.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseKestrel();
-
-                    webBuilder.UseUrls("http://localhost:5001", "http://192.168.8.101:5001");
-
                     webBuilder.UseStartup<Startup>();
                 });
     }
