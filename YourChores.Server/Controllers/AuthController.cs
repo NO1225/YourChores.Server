@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using YourChores.Data.Models;
 using YourChores.Server.APIModels;
@@ -21,8 +23,10 @@ namespace YourChores.Server.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<ActionResult<RegisterAPIModel.Response>> Register(RegisterAPIModel.Request requestModel)
+        public async Task<ActionResult<APIResponse<RegisterAPIModel.Response>>> Register(RegisterAPIModel.Request requestModel)
         {
+            var responseModel = new APIResponse<RegisterAPIModel.Response>();
+
             var user = new ApplicationUser()
             {
                 UserName = requestModel.UserName,
@@ -33,23 +37,57 @@ namespace YourChores.Server.Controllers
 
             if (result.Succeeded)
             {
-                var responseModel = new RegisterAPIModel.Response()
+
+                responseModel.Response = new RegisterAPIModel.Response()
                 {
                     Email = requestModel.Email,
                     UserName = requestModel.UserName
                 };
 
+
                 return Ok(responseModel);
+            }
+
+            responseModel.Errors.AddRange(result.Errors.Select(error => error.Description));
+
+            return responseModel;
+
+        }
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<ActionResult<APIResponse<LoginAPIModel.Response>>> Login(LoginAPIModel.Request requestModel)
+        {
+            var responseModel = new APIResponse<LoginAPIModel.Response>();
+
+            ApplicationUser user;
+
+            if (requestModel.UserNameOrEmail.Contains('@'))
+            {
+                user = await _userManager.FindByEmailAsync(requestModel.UserNameOrEmail);
             }
             else
             {
-                var responseModel = new RegisterAPIModel.Response()
-                {
-                    Errors= result.Errors
-                };
+                user = await _userManager.FindByNameAsync(requestModel.UserNameOrEmail);
+            }
 
+            if (user == null)
+            {
+                responseModel.Errors.Add("Passward Doesn't Match");
                 return responseModel;
             }
+
+            var result = await _signInManager.PasswordSignInAsync(user, requestModel.Passward, false, false);
+
+            if (result.Succeeded)
+            {
+                responseModel.Response.Token = "dfasdfasdfasdfasd";
+                return Ok(responseModel);
+            }
+
+            responseModel.Errors.Add("Passward Doesn't Match");
+
+            return responseModel;
         }
     }
 }
