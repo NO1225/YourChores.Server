@@ -17,7 +17,7 @@ namespace YourChores.Server.APIModels
         public APIResponse()
         {
             Errors = new List<string>();
-            Response = new T();
+            
         }
     }
 }

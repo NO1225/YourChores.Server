@@ -81,7 +81,11 @@ namespace YourChores.Server.Controllers
 
             if (result.Succeeded)
             {
-                responseModel.Response.Token = "dfasdfasdfasdfasd";
+                responseModel.Response = new LoginAPIModel.Response()
+                {
+                    Token = Guid.NewGuid().ToString()
+                };
+
                 return Ok(responseModel);
             }
 
