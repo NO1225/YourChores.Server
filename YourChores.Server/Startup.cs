@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,8 +14,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using YourChores.Data.DataAccess;
 using YourChores.Data.Models;
+using YourChores.Server.Authentication;
 
 namespace YourChores.Server
 {
@@ -30,14 +34,23 @@ namespace YourChores.Server
         public void ConfigureServices(IServiceCollection services)
         {
 
+            // Add the database with the deault connection string
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
             });
 
+            // Adding the idintity (login/register)
             services.AddIdentity<ApplicationUser,IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                // Store it in this database
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                // We are going to use token for authorization
+                .AddDefaultTokenProviders();
 
+            // Adding token authenrication
+            services.AddTokenAuthentication(Configuration);
+
+            // Identity options
             services.Configure<IdentityOptions>(options =>
             {
                 // Very weak passward
@@ -66,6 +79,10 @@ namespace YourChores.Server
 
             app.UseRouting();
 
+            // Use authentication
+            app.UseAuthentication();
+
+            // Use authorization
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
