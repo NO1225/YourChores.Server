@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -118,6 +119,29 @@ namespace YourChores.Server.Controllers
             return responseModel;
         }
 
+        [HttpPost]
+        [Authorize]
+        [Route("TokenLogin")]
+        public async Task<ActionResult<APIResponse<LoginAPIModel.Response>>> TokenLogin()
+        {
+            // Defining empty response
+            var responseModel = new APIResponse<LoginAPIModel.Response>();
+
+            // Defining a user
+            ApplicationUser user;
+
+            user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            // Return the response with the generated token
+            responseModel.Response = new LoginAPIModel.Response()
+            {
+                Token = GenerateJSONWebToken(user)
+            };
+
+            return Ok(responseModel);
+        }
+
+        #region Helper Methods
 
         /// <summary>
         /// A method to generate a web token for the user
@@ -145,5 +169,6 @@ namespace YourChores.Server.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        #endregion
     }
 }
