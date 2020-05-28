@@ -119,6 +119,10 @@ namespace YourChores.Server.Controllers
             return responseModel;
         }
 
+        /// <summary>
+        /// End point to check the token and generate new one if valid, and let the user in 
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         [Authorize]
         [Route("TokenLogin")]
@@ -139,6 +143,75 @@ namespace YourChores.Server.Controllers
             };
 
             return Ok(responseModel);
+        }
+
+
+        /// <summary>
+        /// End point to change or assign the first and last name for the user
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize]
+        [Route("ChangeName")]
+        public async Task<ActionResult<APIResonse>> ChangeName(ChangeNameAPIModel.Request requestModel)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            user.Firstname = requestModel.Firstname;
+            user.Lastname = requestModel.Lastname;
+
+            await _userManager.UpdateAsync(user);
+
+            var responseModel = new APIResonse();
+
+            return Ok(responseModel);
+        }
+
+        /// <summary>
+        /// End point to change the passward of the current user
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize]
+        [Route("ChangePassward")]
+        public async Task<ActionResult<APIResonse>> ChangePassward(ChangePasswardAPIModel.Request requestModel)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var result = await _userManager.ChangePasswordAsync(user, requestModel.OldPassward, requestModel.NewPassward);
+
+            var responseModel = new APIResonse();
+
+            if(result.Succeeded)
+            {
+                return Ok(responseModel);
+            }
+
+            responseModel.Errors = result.Errors.Select(error => error.Description).ToList();
+
+            return responseModel;
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("GetMyInfo")]
+        public async Task<ActionResult<APIResponse<UserAPIModel.Response>>> GetMyInfo ()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var responseModel = new APIResponse<UserAPIModel.Response>();
+
+            responseModel.Response = new UserAPIModel.Response()
+            {
+                FirstName = user.Firstname,
+                LastName = user.Lastname,
+                UserName = user.UserName,
+                Email = user.Email
+            };
+
+            return Ok(responseModel);
+
         }
 
         #region Helper Methods

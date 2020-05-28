@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace YourChores.Server.APIModels
 {
-    public class APIResponse<T>
-        where T : new()
+    /// <summary>
+    ///  Base response in case there is no data 
+    /// </summary>
+    public class APIResonse
     {
-        public bool Success => Errors == null||Errors.Count==0 ;
+        public bool Success => Errors == null || Errors.Count == 0;
 
         public List<string> Errors { get; set; }
-
-        public T Response { get; set; }
 
         public void AddError(string error)
         {
@@ -22,6 +22,17 @@ namespace YourChores.Server.APIModels
 
             Errors.Add(error);
         }
+    }
+
+    /// <summary>
+    /// Base response with data
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class APIResponse<T> : APIResonse
+        where T : new()
+    {
+
+        public T Response { get; set; }
 
     }
 }
