@@ -14,5 +14,18 @@ namespace YourChores.Data.DataAccess
         {
 
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Room>().HasIndex(room => room.RoomName).IsUnique();
+        }
+
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<ToDoItem> ToDoItems { get; set; }
+        public DbSet<RoomJoinRequest> RoomJoinRequests { get; set; }
+        public DbSet<RoomUser> RoomUsers { get; set; }
+
     }
 }
