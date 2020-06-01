@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using YourChores.Data.Enums;
 
 namespace YourChores.Data.Models
 {
@@ -10,9 +9,6 @@ namespace YourChores.Data.Models
     {
         [Required]
         public ApplicationUser User { get; set; }
-
-        [Required]
-        public JoinRequestType JoinRequestType { get; set; }
 
         [Required]
         public Room Room { get; set; }
