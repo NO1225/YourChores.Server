@@ -5,6 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200531044959_finishing the database.cs" />
+    <Compile Remove="Migrations\20200531044959_finishing the database.Designer.cs" />
+    <Compile Remove="Migrations\20200601073721_Adding join request type.cs" />
+    <Compile Remove="Migrations\20200601073721_Adding join request type.Designer.cs" />
+    <Compile Remove="Migrations\20200601080140_Changing string to GUID.cs" />
+    <Compile Remove="Migrations\20200601080140_Changing string to GUID.Designer.cs" />
+    <Compile Remove="Migrations\20200601080536_Changing string to int.cs" />
+    <Compile Remove="Migrations\20200601080536_Changing string to int.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />

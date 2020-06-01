@@ -8,7 +8,7 @@ namespace YourChores.Data.Models
     public class BaseModel
     {
         [Key]
-        public string Id { get; set; }
+        public int Id { get; set; } 
 
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     }
