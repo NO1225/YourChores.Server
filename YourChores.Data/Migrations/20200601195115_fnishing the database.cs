@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace YourChores.Data.Migrations
 {
-    public partial class finishingthedatabase : Migration
+    public partial class fnishingthedatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,8 @@ namespace YourChores.Data.Migrations
                 name: "Rooms",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     RoomName = table.Column<string>(maxLength: 50, nullable: false),
                     AllowMembersToPost = table.Column<bool>(nullable: false)
@@ -25,10 +26,12 @@ namespace YourChores.Data.Migrations
                 name: "RoomJoinRequests",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
-                    RoomId = table.Column<string>(nullable: false),
+                    JoinRequestType = table.Column<int>(nullable: false),
+                    RoomId = table.Column<int>(nullable: false),
                     Declined = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -52,10 +55,11 @@ namespace YourChores.Data.Migrations
                 name: "RoomUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<string>(nullable: false),
-                    RoomId = table.Column<string>(nullable: false),
+                    RoomId = table.Column<int>(nullable: false),
                     Owener = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -79,14 +83,15 @@ namespace YourChores.Data.Migrations
                 name: "ToDoItems",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(maxLength: 700, nullable: false),
                     Done = table.Column<bool>(nullable: false),
                     Urgency = table.Column<int>(nullable: false),
                     DoerId = table.Column<string>(nullable: true),
                     DoingTime = table.Column<DateTime>(nullable: true),
-                    RoomId = table.Column<string>(nullable: false)
+                    RoomId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

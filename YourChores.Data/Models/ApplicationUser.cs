@@ -13,5 +13,9 @@ namespace YourChores.Data.Models
 
         [MaxLength(50)]
         public string Lastname { get; set; }
+
+        public IList<RoomUser> RoomUsers { get; set; }
+
+        public IList<RoomJoinRequest> RoomJoinRequests { get; set; }
     }
 }

@@ -13,5 +13,9 @@ namespace YourChores.Data.Models
 
         [Required]
         public bool AllowMembersToPost { get; set; } 
+
+        public IList<RoomUser> RoomUsers { get; set; }
+
+        public IList<RoomJoinRequest> RoomJoinRequests { get; set; }
     }
 }

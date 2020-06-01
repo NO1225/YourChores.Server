@@ -225,8 +225,10 @@ namespace YourChores.Data.Migrations
 
             modelBuilder.Entity("YourChores.Data.Models.Room", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("AllowMembersToPost")
                         .HasColumnType("bit");
@@ -249,8 +251,10 @@ namespace YourChores.Data.Migrations
 
             modelBuilder.Entity("YourChores.Data.Models.RoomJoinRequest", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -258,9 +262,11 @@ namespace YourChores.Data.Migrations
                     b.Property<bool>("Declined")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("JoinRequestType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -277,8 +283,10 @@ namespace YourChores.Data.Migrations
 
             modelBuilder.Entity("YourChores.Data.Models.RoomUser", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -286,9 +294,8 @@ namespace YourChores.Data.Migrations
                     b.Property<bool>("Owener")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -305,8 +312,10 @@ namespace YourChores.Data.Migrations
 
             modelBuilder.Entity("YourChores.Data.Models.ToDoItem", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -325,9 +334,8 @@ namespace YourChores.Data.Migrations
                     b.Property<bool>("Done")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Urgency")
                         .HasColumnType("int");
@@ -395,13 +403,13 @@ namespace YourChores.Data.Migrations
             modelBuilder.Entity("YourChores.Data.Models.RoomJoinRequest", b =>
                 {
                     b.HasOne("YourChores.Data.Models.Room", "Room")
-                        .WithMany()
+                        .WithMany("RoomJoinRequests")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("YourChores.Data.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("RoomJoinRequests")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -410,13 +418,13 @@ namespace YourChores.Data.Migrations
             modelBuilder.Entity("YourChores.Data.Models.RoomUser", b =>
                 {
                     b.HasOne("YourChores.Data.Models.Room", "Room")
-                        .WithMany()
+                        .WithMany("RoomUsers")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("YourChores.Data.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("RoomUsers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
