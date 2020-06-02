@@ -99,5 +99,124 @@ namespace YourChores.Server.Controllers
             return Ok(responseModel);
 
         }
+
+        /// <summary>
+        /// End point to get all the rooms that the current user joined
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult<APIResponse<List<RoomAPIModel.Response>>>> GetRooms()
+        {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            // Initiate the response model
+            var responseModel = new APIResponse<List<RoomAPIModel.Response>>();
+
+            // Getting the room users
+            responseModel.Response = await _context.RoomUsers
+                // Include the user (join)
+                .Include(roomUser => roomUser.User)
+                // Include the room (join)
+                .Include(roomUser => roomUser.Room)
+                // Select all records related to the current user
+                .Where(roomUser => roomUser.User.Id == user.Id)
+                // Select just the required feilds and assign them to our response
+                .Select(roomUser => new RoomAPIModel.Response()
+                {
+                    RoomName = roomUser.Room.RoomName,
+                    AllowMembersToPost = roomUser.Room.AllowMembersToPost
+                })
+                // Run the query and get the data
+                .ToListAsync();
+
+            // return the rooms
+            return Ok(responseModel);
+        }
+
+
+        /// <summary>
+        /// End point to get the details of a room by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("getRoomById/{id}")]
+        public async Task<ActionResult<APIResponse<RoomAPIModel.DetailedResponse>>> GetRoomById(int id)
+        {
+            // Initiate the response model
+            var responseModel = new APIResponse<RoomAPIModel.DetailedResponse>();
+
+            // Get all the rooms
+            responseModel.Response = await _context.Rooms
+                // Include the room users (join)
+                .Include(room => room.RoomUsers)
+                // Include the user of room user (join)
+                .ThenInclude(roomUser => roomUser.User)
+                // Select the required room
+                .Where(room => room.Id == id)
+                // Assign it to our response
+                .Select(room =>
+                // Our response
+                    new RoomAPIModel.DetailedResponse()
+                    {
+                        RoomName = room.RoomName,
+                        AllowMembersToPost = room.AllowMembersToPost,
+                        // Getting the members and assigning them to our member response
+                        RoomMembers = room.RoomUsers.Select(roomUser =>
+                            new RoomAPIModel.RoomMember()
+                            {
+                                FirstName = roomUser.User.Firstname,
+                                LastName = roomUser.User.Lastname
+                            }
+                        ).ToList()
+                    }
+                    // Return the room
+                ).FirstOrDefaultAsync();
+
+            // Returning the response
+            return Ok(responseModel);
+        }
+
+        /// <summary>
+        /// End point to get the details of a room by Name
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("getRoomByName/{name}")]
+        public async Task<ActionResult<APIResponse<RoomAPIModel.DetailedResponse>>> GetRoomByName(string name)
+        {
+            // Initiate the response model
+            var responseModel = new APIResponse<RoomAPIModel.DetailedResponse>();
+
+            // Get all the rooms
+            responseModel.Response = await _context.Rooms
+                // Include the room users (join)
+                .Include(room => room.RoomUsers)
+                // Include the user of room user (join)
+                .ThenInclude(roomUser => roomUser.User)
+                // Select the required room
+                .Where(room => room.RoomName == name)
+                // Assign it to our response
+                .Select(room =>
+                // Our response
+                    new RoomAPIModel.DetailedResponse()
+                    {
+                        RoomName = room.RoomName,
+                        AllowMembersToPost = room.AllowMembersToPost,
+                        // Getting the members and assigning them to our member response
+                        RoomMembers = room.RoomUsers.Select(roomUser =>
+                            new RoomAPIModel.RoomMember()
+                            {
+                                FirstName = roomUser.User.Firstname,
+                                LastName = roomUser.User.Lastname
+                            }
+                        ).ToList()
+                    }
+                    // Return the room
+                ).FirstOrDefaultAsync();
+
+            // Returning the response
+            return Ok(responseModel);
+        }
     }
 }
