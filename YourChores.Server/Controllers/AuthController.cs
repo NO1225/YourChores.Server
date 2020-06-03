@@ -154,7 +154,7 @@ namespace YourChores.Server.Controllers
         [HttpPost]
         [Authorize]
         [Route("ChangeName")]
-        public async Task<ActionResult<APIResonse>> ChangeName(ChangeNameAPIModel.Request requestModel)
+        public async Task<ActionResult<APIResponse>> ChangeName(ChangeNameAPIModel.Request requestModel)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
@@ -163,7 +163,7 @@ namespace YourChores.Server.Controllers
 
             await _userManager.UpdateAsync(user);
 
-            var responseModel = new APIResonse();
+            var responseModel = new APIResponse();
 
             return Ok(responseModel);
         }
@@ -176,13 +176,13 @@ namespace YourChores.Server.Controllers
         [HttpPost]
         [Authorize]
         [Route("ChangePassward")]
-        public async Task<ActionResult<APIResonse>> ChangePassward(ChangePasswardAPIModel.Request requestModel)
+        public async Task<ActionResult<APIResponse>> ChangePassward(ChangePasswardAPIModel.Request requestModel)
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
             var result = await _userManager.ChangePasswordAsync(user, requestModel.OldPassward, requestModel.NewPassward);
 
-            var responseModel = new APIResonse();
+            var responseModel = new APIResponse();
 
             if(result.Succeeded)
             {
@@ -204,6 +204,7 @@ namespace YourChores.Server.Controllers
 
             responseModel.Response = new UserAPIModel.Response()
             {
+                Id = user.Id,
                 FirstName = user.Firstname,
                 LastName = user.Lastname,
                 UserName = user.UserName,

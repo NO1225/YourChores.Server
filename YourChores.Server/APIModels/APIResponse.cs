@@ -9,7 +9,7 @@ namespace YourChores.Server.APIModels
     /// <summary>
     ///  Base response in case there is no data 
     /// </summary>
-    public class APIResonse
+    public class APIResponse
     {
         public bool Success => Errors == null || Errors.Count == 0;
 
@@ -28,7 +28,7 @@ namespace YourChores.Server.APIModels
     /// Base response with data
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class APIResponse<T> : APIResonse
+    public class APIResponse<T> : APIResponse
         where T : new()
     {
 
