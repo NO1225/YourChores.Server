@@ -17,5 +17,7 @@ namespace YourChores.Data.Models
         public IList<RoomUser> RoomUsers { get; set; }
 
         public IList<RoomJoinRequest> RoomJoinRequests { get; set; }
+
+        public IList<ToDoItem> ToDoItems { get; set; }
     }
 }

@@ -17,6 +17,8 @@ namespace YourChores.Server.Controllers
     [Authorize]
     public class RoomsController : ControllerBase
     {
+        #region Read Only Feilds
+
         /// <summary>
         /// The maximum number of allowed rooms for a user
         /// </summary>
@@ -30,11 +32,23 @@ namespace YourChores.Server.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Defautl constructor
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="userManager"></param>
         public RoomsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
+
+        #endregion
+
 
         /// <summary>
         /// End point to allow the user to create a new room
@@ -117,13 +131,21 @@ namespace YourChores.Server.Controllers
                 .Include(roomUser => roomUser.User)
                 // Include the room (join)
                 .Include(roomUser => roomUser.Room)
+                // Include the chores of this room
+                .ThenInclude(room=>room.ToDoItems)
                 // Select all records related to the current user
                 .Where(roomUser => roomUser.User.Id == user.Id)
                 // Select just the required feilds and assign them to our response
                 .Select(roomUser => new RoomAPIModel.Response()
                 {
+                    // Assign the room name
                     RoomName = roomUser.Room.RoomName,
-                    AllowMembersToPost = roomUser.Room.AllowMembersToPost
+                    // Get if the members are allowed to post 
+                    AllowMembersToPost = roomUser.Room.AllowMembersToPost,
+                    // Get the number of pending chores
+                    NumberOfPendingChores = roomUser.Room.ToDoItems.Where(toDoItem => toDoItem.Done == false).Count(),
+                    // If there is a pending chores, get the highest urgency from them
+                    HighestUrgency = roomUser.Room.ToDoItems.Where(toDoItem => toDoItem.Done == false).Count() == 0 ? Urgency.Low : (Urgency)roomUser.Room.ToDoItems.Max(toDoItem => (int)toDoItem.Urgency)
                 })
                 // Run the query and get the data
                 .ToListAsync();
@@ -146,6 +168,8 @@ namespace YourChores.Server.Controllers
 
             // Get all the rooms
             responseModel.Response = await _context.Rooms
+                // Include the room chores (join)
+                .Include(room => room.ToDoItems)
                 // Include the room users (join)
                 .Include(room => room.RoomUsers)
                 // Include the user of room user (join)
@@ -166,7 +190,14 @@ namespace YourChores.Server.Controllers
                                 FirstName = roomUser.User.Firstname,
                                 LastName = roomUser.User.Lastname
                             }
-                        ).ToList()
+                        ).ToList(),
+                        // Gettig the chores in this room
+                        Chores = room.ToDoItems.Select(toDoItem=>new RoomAPIModel.Chore()
+                        {
+                            Description = toDoItem.Description,
+                            Done = toDoItem.Done,
+                            Urgency = toDoItem.Urgency
+                        }).ToList()
                     }
                     // Return the room
                 ).FirstOrDefaultAsync();
@@ -188,6 +219,8 @@ namespace YourChores.Server.Controllers
 
             // Get all the rooms
             responseModel.Response = await _context.Rooms
+                // Include the room chores (join)
+                .Include(room => room.ToDoItems)
                 // Include the room users (join)
                 .Include(room => room.RoomUsers)
                 // Include the user of room user (join)
@@ -208,7 +241,14 @@ namespace YourChores.Server.Controllers
                                 FirstName = roomUser.User.Firstname,
                                 LastName = roomUser.User.Lastname
                             }
-                        ).ToList()
+                        ).ToList(),
+                        // Gettig the chores in this room
+                        Chores = room.ToDoItems.Select(toDoItem => new RoomAPIModel.Chore()
+                        {
+                            Description = toDoItem.Description,
+                            Done = toDoItem.Done,
+                            Urgency = toDoItem.Urgency
+                        }).ToList()
                     }
                     // Return the room
                 ).FirstOrDefaultAsync();
