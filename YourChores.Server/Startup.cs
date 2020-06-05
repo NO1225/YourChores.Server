@@ -15,29 +15,42 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using YourChores.Data.DataAccess;
 using YourChores.Data.Models;
 using YourChores.Server.Authentication;
 
 namespace YourChores.Server
 {
+    /// <summary>
+    /// The startup of our server
+    /// </summary>
     public class Startup
     {
+
+        private readonly IConfiguration _configuration;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="configuration"></param>
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
 
             // Add the database with the deault connection string
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+                options.UseSqlServer(_configuration.GetConnectionString("Default"));
             });
 
             // Adding the idintity (login/register)
@@ -48,7 +61,7 @@ namespace YourChores.Server
                 .AddDefaultTokenProviders();
 
             // Adding token authenrication
-            services.AddTokenAuthentication(Configuration);
+            services.AddTokenAuthentication(_configuration);
 
             // Identity options
             services.Configure<IdentityOptions>(options =>
@@ -64,10 +77,54 @@ namespace YourChores.Server
                 options.User.RequireUniqueEmail = true;
             });
 
+            // Adding swagger to our server
+            services.AddSwaggerGen(options =>
+            {
+                // Adding swagger document
+                options.SwaggerDoc("v1.0", new OpenApiInfo() { Title = "Main API v1.0", Version = "v1.0" });
+
+                // To use unique names with the requests and responses
+                options.CustomSchemaIds(x => x.FullName);
+
+                // Include the comments that we wrote in the documentation
+                options.IncludeXmlComments("YourChores.Server.xml");
+
+                // Defining the security schema
+                var securitySchema = new OpenApiSecurityScheme()
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                };
+
+                // Adding the bearer token authentaction option to the ui
+                options.AddSecurityDefinition("Bearer", securitySchema );
+
+                // use the token provided with the endpoints call
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    { securitySchema, new[] { "Bearer" } }
+                });
+
+            });
+
+
+
             services.AddControllers();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -84,6 +141,21 @@ namespace YourChores.Server
 
             // Use authorization
             app.UseAuthorization();
+
+            // If is in development
+            if(env.IsDevelopment())
+            {
+                // Use swagger
+                app.UseSwagger();
+
+                // Add swagger UI
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Versioned API v1.0");
+
+                    c.DocExpansion(DocExpansion.None);
+                });
+            }
 
             app.UseEndpoints(endpoints =>
             {

@@ -6,6 +6,9 @@ using System.Text;
 
 namespace YourChores.Server.Authentication
 {
+    /// <summary>
+    /// Authentication wrappper 
+    /// </summary>
     public static class AuthenticationExtension
     {
         /// <summary>

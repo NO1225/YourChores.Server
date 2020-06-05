@@ -12,6 +12,9 @@ using YourChores.Server.APIModels;
 
 namespace YourChores.Server.Controllers
 {
+    /// <summary>
+    /// Controller in charge of all the operation related to rooms
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -158,7 +161,7 @@ namespace YourChores.Server.Controllers
         /// <summary>
         /// End point to get the details of a room by Id
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The id of the room</param>
         /// <returns></returns>
         [HttpGet("getRoomById/{id}")]
         public async Task<ActionResult<APIResponse<RoomAPIModel.DetailedResponse>>> GetRoomById(int id)
@@ -209,7 +212,7 @@ namespace YourChores.Server.Controllers
         /// <summary>
         /// End point to get the details of a room by Name
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name">The name of the room</param>
         /// <returns></returns>
         [HttpGet("getRoomByName/{name}")]
         public async Task<ActionResult<APIResponse<RoomAPIModel.DetailedResponse>>> GetRoomByName(string name)

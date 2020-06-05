@@ -11,10 +11,20 @@ namespace YourChores.Server.APIModels
     /// </summary>
     public class APIResponse
     {
+        /// <summary>
+        /// If the call was successfull
+        /// </summary>
         public bool Success => Errors == null || Errors.Count == 0;
 
+        /// <summary>
+        /// The errors if not successfull
+        /// </summary>
         public List<string> Errors { get; set; }
 
+        /// <summary>
+        /// ADding an error to the error list
+        /// </summary>
+        /// <param name="error"></param>
         public void AddError(string error)
         {
             if (Errors == null)
@@ -31,7 +41,9 @@ namespace YourChores.Server.APIModels
     public class APIResponse<T> : APIResponse
         where T : new()
     {
-
+        /// <summary>
+        /// The response data
+        /// </summary>
         public T Response { get; set; }
 
     }

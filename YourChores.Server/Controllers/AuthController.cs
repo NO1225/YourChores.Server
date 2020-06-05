@@ -14,14 +14,29 @@ using YourChores.Server.APIModels;
 
 namespace YourChores.Server.Controllers
 {
+    /// <summary>
+    /// The controller in charge of all the operation of the authentication
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
+        #region Private Feilds
+
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Default constrcutor
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="signInManager"></param>
+        /// <param name="userManager"></param>
         public AuthController(IConfiguration configuration, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
@@ -29,36 +44,51 @@ namespace YourChores.Server.Controllers
             _configuration = configuration;
         }
 
+        #endregion
+
+        /// <summary>
+        /// Register a new user
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("Register")]
         public async Task<ActionResult<APIResponse<RegisterAPIModel.Response>>> Register(RegisterAPIModel.Request requestModel)
         {
+            // Initiating the respoonse model
             var responseModel = new APIResponse<RegisterAPIModel.Response>();
 
+            // Defining a new user
             var user = new ApplicationUser()
             {
                 UserName = requestModel.UserName,
                 Email = requestModel.Email
             };
 
+            // Try to register the new user
             var result = await _userManager.CreateAsync(user, requestModel.Passward);
 
-            if (result.Succeeded)
+            // If ther was an error
+            if (!result.Succeeded)
             {
+                // Adding the errors to the response
+                responseModel.Errors = (result.Errors.Select(error => error.Description)).ToList();
 
-                responseModel.Response = new RegisterAPIModel.Response()
-                {
-                    Email = requestModel.Email,
-                    UserName = requestModel.UserName
-                };
+                // Return the response
+                return responseModel;
 
-
-                return Ok(responseModel);
             }
 
-            responseModel.Errors = (result.Errors.Select(error => error.Description)).ToList();
+            // if success, fill the response 
+            responseModel.Response = new RegisterAPIModel.Response()
+            {
+                Email = requestModel.Email,
+                UserName = requestModel.UserName
+            };
 
-            return responseModel;
+            // Return the response
+            return Ok(responseModel);
+            
 
         }
 
@@ -156,15 +186,19 @@ namespace YourChores.Server.Controllers
         [Route("ChangeName")]
         public async Task<ActionResult<APIResponse>> ChangeName(ChangeNameAPIModel.Request requestModel)
         {
+            // Get the user
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
+            // Change the user first and last name
             user.Firstname = requestModel.Firstname;
             user.Lastname = requestModel.Lastname;
 
+            // Update
             await _userManager.UpdateAsync(user);
 
             var responseModel = new APIResponse();
 
+            // return the response
             return Ok(responseModel);
         }
 
@@ -178,30 +212,46 @@ namespace YourChores.Server.Controllers
         [Route("ChangePassward")]
         public async Task<ActionResult<APIResponse>> ChangePassward(ChangePasswardAPIModel.Request requestModel)
         {
+            // Get the user
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
+            // Try to change the passward
             var result = await _userManager.ChangePasswordAsync(user, requestModel.OldPassward, requestModel.NewPassward);
 
+            // Initiate the response
             var responseModel = new APIResponse();
 
-            if(result.Succeeded)
+            // if there is an error
+            if(!result.Succeeded)
             {
-                return Ok(responseModel);
+                // Add the errors to the response
+                responseModel.Errors = result.Errors.Select(error => error.Description).ToList();
+
+                // Return the response
+                return responseModel;
             }
 
-            responseModel.Errors = result.Errors.Select(error => error.Description).ToList();
-
-            return responseModel;
+            // Return the response
+            return Ok(responseModel);
+            
         }
 
+        /// <summary>
+        /// End point to get the info of the logged in user
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Authorize]
         [Route("GetMyInfo")]
         public async Task<ActionResult<APIResponse<UserAPIModel.Response>>> GetMyInfo ()
         {
+            // Get the logged in user
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            // Initiate the response model
             var responseModel = new APIResponse<UserAPIModel.Response>();
 
+            // Fil the response model
             responseModel.Response = new UserAPIModel.Response()
             {
                 Id = user.Id,
@@ -211,6 +261,7 @@ namespace YourChores.Server.Controllers
                 Email = user.Email
             };
 
+            // return the response model
             return Ok(responseModel);
 
         }

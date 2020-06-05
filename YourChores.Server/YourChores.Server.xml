@@ -1,0 +1,524 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>YourChores.Server</name>
+    </assembly>
+    <members>
+        <member name="T:YourChores.Server.APIModels.APIResponse">
+            <summary>
+             Base response in case there is no data 
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.APIResponse.Success">
+            <summary>
+            If the call was successfull
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.APIResponse.Errors">
+            <summary>
+            The errors if not successfull
+            </summary>
+        </member>
+        <member name="M:YourChores.Server.APIModels.APIResponse.AddError(System.String)">
+            <summary>
+            ADding an error to the error list
+            </summary>
+            <param name="error"></param>
+        </member>
+        <member name="T:YourChores.Server.APIModels.APIResponse`1">
+            <summary>
+            Base response with data
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:YourChores.Server.APIModels.APIResponse`1.Response">
+            <summary>
+            The response data
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.ChangeNameAPIModel">
+            <summary>
+            The api model for changing the first and last name of a user
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.ChangeNameAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChangeNameAPIModel.Request.Firstname">
+            <summary>
+            The first name
+            </summary>
+            <example>firstName</example>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChangeNameAPIModel.Request.Lastname">
+            <summary>
+            The last name
+            </summary>
+            <example>lastName</example>
+        </member>
+        <member name="T:YourChores.Server.APIModels.ChangePasswardAPIModel">
+            <summary>
+            The api model for changin the passward
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.ChangePasswardAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChangePasswardAPIModel.Request.OldPassward">
+            <summary>
+            The old passward
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChangePasswardAPIModel.Request.NewPassward">
+            <summary>
+            The new passward
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.CreateRoomAPIModel">
+            <summary>
+            API model for creating a room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.CreateRoomAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CreateRoomAPIModel.Request.RoomName">
+            <summary>
+            The name of the room
+            </summary>
+            <example>Adam's Home</example>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CreateRoomAPIModel.Request.AllowMembersToPost">
+            <summary>
+            Giving the ability to room members to share chores
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.CreateRoomAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CreateRoomAPIModel.Response.RoomName">
+            <summary>
+            The created room name
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CreateRoomAPIModel.Response.AllowMembersToPost">
+            <summary>
+            if the created room allow members to post
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.InviteUserRequestAPIModel">
+            <summary>
+            Api model to invite a user to join a toom
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.InviteUserRequestAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.InviteUserRequestAPIModel.Request.RoomId">
+            <summary>
+            The id of the room
+            </summary>
+            <example>1</example>
+        </member>
+        <member name="P:YourChores.Server.APIModels.InviteUserRequestAPIModel.Request.UserId">
+            <summary>
+            The id of the user
+            </summary>
+            <example>e4787142-cfe6-423d-a4ac-da15c58ef09e</example>
+        </member>
+        <member name="T:YourChores.Server.APIModels.JoinRoomRequestAPIModel">
+            <summary>
+            API model to send join request to a room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.JoinRoomRequestAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.JoinRoomRequestAPIModel.Request.RoomId">
+            <summary>
+            The id of the room
+            </summary>
+            <example>1</example>
+        </member>
+        <member name="T:YourChores.Server.APIModels.LoginAPIModel">
+            <summary>
+            API Model for the login
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.LoginAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.LoginAPIModel.Request.UserNameOrEmail">
+            <summary>
+            You can either use your username or email
+            </summary>
+            <example>qwer</example>
+        </member>
+        <member name="P:YourChores.Server.APIModels.LoginAPIModel.Request.Passward">
+            <summary>
+            The passward for loggin in
+            </summary>
+            <example>123123123</example>
+        </member>
+        <member name="T:YourChores.Server.APIModels.LoginAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.LoginAPIModel.Response.Token">
+            <summary>
+            The authorization token
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RegisterAPIModel">
+            <summary>
+            API model for registering a new user
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RegisterAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RegisterAPIModel.Request.UserName">
+            <summary>
+            The user name for the new user, must be unique
+            </summary>
+            <example>Adam</example>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RegisterAPIModel.Request.Email">
+            <summary>
+            The email of the new user, must be unique
+            </summary>
+            <example>Adam@gmail.com</example>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RegisterAPIModel.Request.Passward">
+            <summary>
+            The passward for the new user
+            Must be more than 8 digits
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RegisterAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RegisterAPIModel.Response.UserName">
+            <summary>
+            The userName of the created user
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RegisterAPIModel.Response.Email">
+            <summary>
+            The email of the created user
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RoomAPIModel">
+            <summary>
+            API Model for the rooms end point
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RoomAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.Response.RoomName">
+            <summary>
+            The name of the requested room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.Response.AllowMembersToPost">
+            <summary>
+            If the requested room allow members to post
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.Response.NumberOfPendingChores">
+            <summary>
+            Number of pending chores in this room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.Response.HighestUrgency">
+            <summary>
+            The highest urgency chore from the pending chores in this room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RoomAPIModel.DetailedResponse">
+            <summary>
+            The detailed response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.DetailedResponse.RoomMembers">
+            <summary>
+            The members of this room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.DetailedResponse.Chores">
+            <summary>
+            The chores of this room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RoomAPIModel.RoomMember">
+            <summary>
+            Room member response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.RoomMember.FirstName">
+            <summary>
+            The first name of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.RoomMember.LastName">
+            <summary>
+            The last name of the member
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RoomAPIModel.Chore">
+            <summary>
+            Chore response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.Chore.Description">
+            <summary>
+            Chore description
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.Chore.Done">
+            <summary>
+            If the chore is done
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.Chore.Urgency">
+            <summary>
+            The urgency of the chore (1:low, 2:medium, 3:high)
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.UserAPIModel">
+            <summary>
+            API Model to return the user information
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.UserAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UserAPIModel.Response.Id">
+            <summary>
+            The id of the user
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UserAPIModel.Response.FirstName">
+            <summary>
+            THe first name of the user
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UserAPIModel.Response.LastName">
+            <summary>
+            The last name of the user
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UserAPIModel.Response.UserName">
+            <summary>
+            The user name of the user
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UserAPIModel.Response.Email">
+            <summary>
+            The email of the user
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.Authentication.AuthenticationExtension">
+            <summary>
+            Authentication wrappper 
+            </summary>
+        </member>
+        <member name="M:YourChores.Server.Authentication.AuthenticationExtension.AddTokenAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Configure the toekn authentication
+            </summary>
+            <param name="services">Service colleciton</param>
+            <param name="config">Congigeration of the API</param>
+            <returns></returns>
+        </member>
+        <member name="T:YourChores.Server.Controllers.AuthController">
+            <summary>
+            The controller in charge of all the operation of the authentication
+            </summary>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AuthController.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Identity.SignInManager{YourChores.Data.Models.ApplicationUser},Microsoft.AspNetCore.Identity.UserManager{YourChores.Data.Models.ApplicationUser})">
+            <summary>
+            Default constrcutor
+            </summary>
+            <param name="configuration"></param>
+            <param name="signInManager"></param>
+            <param name="userManager"></param>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AuthController.Register(YourChores.Server.APIModels.RegisterAPIModel.Request)">
+            <summary>
+            Register a new user
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AuthController.Login(YourChores.Server.APIModels.LoginAPIModel.Request)">
+            <summary>
+            End point for loggin in using userName/Email with passward
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AuthController.TokenLogin">
+            <summary>
+            End point to check the token and generate new one if valid, and let the user in 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AuthController.ChangeName(YourChores.Server.APIModels.ChangeNameAPIModel.Request)">
+            <summary>
+            End point to change or assign the first and last name for the user
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AuthController.ChangePassward(YourChores.Server.APIModels.ChangePasswardAPIModel.Request)">
+            <summary>
+            End point to change the passward of the current user
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AuthController.GetMyInfo">
+            <summary>
+            End point to get the info of the logged in user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AuthController.GenerateJSONWebToken(YourChores.Data.Models.ApplicationUser)">
+            <summary>
+            A method to generate a web token for the user
+            </summary>
+            <param name="user">The user to generate the web token for</param>
+            <returns></returns>
+        </member>
+        <member name="T:YourChores.Server.Controllers.RoomsController">
+            <summary>
+            Controller in charge of all the operation related to rooms
+            </summary>
+        </member>
+        <member name="F:YourChores.Server.Controllers.RoomsController.MAX_USER_ROOMS">
+            <summary>
+            The maximum number of allowed rooms for a user
+            </summary>
+        </member>
+        <member name="F:YourChores.Server.Controllers.RoomsController.MAX_ROOM_USERS">
+            <summary>
+            The maximum number of user in one room
+            </summary>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.#ctor(YourChores.Data.DataAccess.ApplicationDbContext,Microsoft.AspNetCore.Identity.UserManager{YourChores.Data.Models.ApplicationUser})">
+            <summary>
+            Defautl constructor
+            </summary>
+            <param name="context"></param>
+            <param name="userManager"></param>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.CreateRoom(YourChores.Server.APIModels.CreateRoomAPIModel.Request)">
+            <summary>
+            End point to allow the user to create a new room
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.GetRooms">
+            <summary>
+            End point to get all the rooms that the current user joined
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.GetRoomById(System.Int32)">
+            <summary>
+            End point to get the details of a room by Id
+            </summary>
+            <param name="id">The id of the room</param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.GetRoomByName(System.String)">
+            <summary>
+            End point to get the details of a room by Name
+            </summary>
+            <param name="name">The name of the room</param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.JoinRoom(YourChores.Server.APIModels.JoinRoomRequestAPIModel.Request)">
+            <summary>
+            End point so that the user can send a join request to a room
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.InviteUser(YourChores.Server.APIModels.InviteUserRequestAPIModel.Request)">
+            <summary>
+            End point so that the room room owner can invite users to the room
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="T:YourChores.Server.Program">
+            <summary>
+            The entry class of the application
+            </summary>
+        </member>
+        <member name="M:YourChores.Server.Program.Main(System.String[])">
+            <summary>
+            The entry method of the application
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:YourChores.Server.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Start building the services 
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:YourChores.Server.Startup">
+            <summary>
+            The startup of our server
+            </summary>
+        </member>
+        <member name="M:YourChores.Server.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="M:YourChores.Server.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:YourChores.Server.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+        </member>
+    </members>
+</doc>
