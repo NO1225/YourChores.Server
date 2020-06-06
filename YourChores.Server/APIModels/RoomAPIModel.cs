@@ -18,6 +18,11 @@ namespace YourChores.Server.APIModels
         public class Response
         {
             /// <summary>
+            /// The id of the requested room
+            /// </summary>
+            public int RoomId { get; set; }
+
+            /// <summary>
             /// The name of the requested room
             /// </summary>
             public string RoomName { get; set; }

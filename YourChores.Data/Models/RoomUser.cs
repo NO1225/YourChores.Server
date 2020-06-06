@@ -14,6 +14,6 @@ namespace YourChores.Data.Models
         public Room Room { get; set; }
 
         [Required]
-        public bool Owener { get; set; } = false;
+        public bool Owner { get; set; } = false;
     }
 }

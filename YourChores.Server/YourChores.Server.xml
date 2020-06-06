@@ -237,6 +237,11 @@
             The response model
             </summary>
         </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.Response.RoomId">
+            <summary>
+            The id of the requested room
+            </summary>
+        </member>
         <member name="P:YourChores.Server.APIModels.RoomAPIModel.Response.RoomName">
             <summary>
             The name of the requested room

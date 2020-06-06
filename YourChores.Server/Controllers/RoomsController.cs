@@ -94,7 +94,7 @@ namespace YourChores.Server.Controllers
             // Assign the user as the owner of the room
             var roomUser = new RoomUser()
             {
-                Owener = true,
+                Owner = true,
                 Room = room,
                 User = user
             };
@@ -135,12 +135,14 @@ namespace YourChores.Server.Controllers
                 // Include the room (join)
                 .Include(roomUser => roomUser.Room)
                 // Include the chores of this room
-                .ThenInclude(room=>room.ToDoItems)
+                .ThenInclude(room => room.ToDoItems)
                 // Select all records related to the current user
                 .Where(roomUser => roomUser.User.Id == user.Id)
                 // Select just the required feilds and assign them to our response
                 .Select(roomUser => new RoomAPIModel.Response()
                 {
+                    // Assign the id
+                    RoomId = roomUser.Room.Id,
                     // Assign the room name
                     RoomName = roomUser.Room.RoomName,
                     // Get if the members are allowed to post 
@@ -184,6 +186,8 @@ namespace YourChores.Server.Controllers
                 // Our response
                     new RoomAPIModel.DetailedResponse()
                     {
+                        // Assign the id
+                        RoomId = room.Id,
                         RoomName = room.RoomName,
                         AllowMembersToPost = room.AllowMembersToPost,
                         // Getting the members and assigning them to our member response
@@ -195,7 +199,7 @@ namespace YourChores.Server.Controllers
                             }
                         ).ToList(),
                         // Gettig the chores in this room
-                        Chores = room.ToDoItems.Select(toDoItem=>new RoomAPIModel.Chore()
+                        Chores = room.ToDoItems.Select(toDoItem => new RoomAPIModel.Chore()
                         {
                             Description = toDoItem.Description,
                             Done = toDoItem.Done,
@@ -235,6 +239,8 @@ namespace YourChores.Server.Controllers
                 // Our response
                     new RoomAPIModel.DetailedResponse()
                     {
+                        // Assign the id
+                        RoomId = room.Id,
                         RoomName = room.RoomName,
                         AllowMembersToPost = room.AllowMembersToPost,
                         // Getting the members and assigning them to our member response
@@ -278,7 +284,7 @@ namespace YourChores.Server.Controllers
             var responseModel = new APIResponse();
 
             // Check if the room id is valid
-            if(room==null)
+            if (room == null)
             {
                 responseModel.AddError("Room not found");
 
@@ -306,7 +312,7 @@ namespace YourChores.Server.Controllers
                 // Include the room (join)
                 .Include(roomJoinRequest => roomJoinRequest.Room)
                 // Check if the user has a;ready sent a join request to this room
-                .Any(roomJoinRequest => roomJoinRequest.Room.Id == requestModel.RoomId && roomJoinRequest.User.Id == user.Id && roomJoinRequest.JoinRequestType== JoinRequestType.Join))
+                .Any(roomJoinRequest => roomJoinRequest.Room.Id == requestModel.RoomId && roomJoinRequest.User.Id == user.Id && roomJoinRequest.JoinRequestType == JoinRequestType.Join))
             {
                 responseModel.AddError("You already sent a request to this room");
 
@@ -387,9 +393,9 @@ namespace YourChores.Server.Controllers
 
             // Get the room
             var roomUser = await _context.RoomUsers
-                .Include(roomUser=>roomUser.Room)
+                .Include(roomUser => roomUser.Room)
                 .Include(roomUser => roomUser.User)
-                .FirstOrDefaultAsync(roomUser => roomUser.Owener && roomUser.Room.Id == requestModel.RoomId && roomUser.User.Id == user.Id);
+                .FirstOrDefaultAsync(roomUser => roomUser.Owner && roomUser.Room.Id == requestModel.RoomId && roomUser.User.Id == user.Id);
 
 
             // Check if the room id is valid
