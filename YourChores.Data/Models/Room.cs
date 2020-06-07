@@ -11,6 +11,8 @@ namespace YourChores.Data.Models
         [MaxLength(50)]
         public string RoomName { get; set; }
 
+        public string NormalizedRoomName { get => RoomName.ToLower(); private set{} }
+
         [Required]
         public bool AllowMembersToPost { get; set; } 
 

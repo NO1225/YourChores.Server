@@ -75,9 +75,9 @@ namespace YourChores.Server.Controllers
                 return responseModel;
             }
 
-
+            var normalizedRoomName = requestModel.RoomName.ToLower();
             // Check for the duplication in room name
-            if (await _context.Rooms.FirstOrDefaultAsync(room => room.RoomName == requestModel.RoomName) != null)
+            if (await _context.Rooms.FirstOrDefaultAsync(room => room.NormalizedRoomName == normalizedRoomName) != null)
             {
                 responseModel.AddError("The name is already in use, please select another name");
 
@@ -168,6 +168,9 @@ namespace YourChores.Server.Controllers
         [HttpGet("getRoomById/{id}")]
         public async Task<ActionResult<APIResponse<RoomAPIModel.DetailedResponse>>> GetRoomById(int id)
         {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
             // Initiate the response model
             var responseModel = new APIResponse<RoomAPIModel.DetailedResponse>();
 
@@ -179,8 +182,8 @@ namespace YourChores.Server.Controllers
                 .Include(room => room.RoomUsers)
                 // Include the user of room user (join)
                 .ThenInclude(roomUser => roomUser.User)
-                // Select the required room
-                .Where(room => room.Id == id)
+                // Select the required room and make sure that this user is a member of it
+                .Where(room => room.Id == id && room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id))
                 // Assign it to our response
                 .Select(room =>
                 // Our response
@@ -190,6 +193,8 @@ namespace YourChores.Server.Controllers
                         RoomId = room.Id,
                         RoomName = room.RoomName,
                         AllowMembersToPost = room.AllowMembersToPost,
+                        // If the current user is the owner of this room
+                        IsOwner = room.RoomUsers.FirstOrDefault(roomUser=>roomUser.User.Id == user.Id).Owner,
                         // Getting the members and assigning them to our member response
                         RoomMembers = room.RoomUsers.Select(roomUser =>
                             new RoomAPIModel.RoomMember()
@@ -218,11 +223,13 @@ namespace YourChores.Server.Controllers
         /// </summary>
         /// <param name="name">The name of the room</param>
         /// <returns></returns>
-        [HttpGet("getRoomByName/{name}")]
-        public async Task<ActionResult<APIResponse<RoomAPIModel.DetailedResponse>>> GetRoomByName(string name)
+        [HttpGet("getRoomsByName/{name}")]
+        public async Task<ActionResult<APIResponse<List<RoomAPIModel.DetailedResponse>>>> GetRoomsByName(string name)
         {
             // Initiate the response model
-            var responseModel = new APIResponse<RoomAPIModel.DetailedResponse>();
+            var responseModel = new APIResponse<List<RoomAPIModel.DetailedResponse>>();
+
+            var normalizedName = name.ToLower();
 
             // Get all the rooms
             responseModel.Response = await _context.Rooms
@@ -233,7 +240,7 @@ namespace YourChores.Server.Controllers
                 // Include the user of room user (join)
                 .ThenInclude(roomUser => roomUser.User)
                 // Select the required room
-                .Where(room => room.RoomName == name)
+                .Where(room => room.NormalizedRoomName.Contains(normalizedName))
                 // Assign it to our response
                 .Select(room =>
                 // Our response
@@ -260,7 +267,7 @@ namespace YourChores.Server.Controllers
                         }).ToList()
                     }
                     // Return the room
-                ).FirstOrDefaultAsync();
+                ).ToListAsync();
 
             // Returning the response
             return Ok(responseModel);

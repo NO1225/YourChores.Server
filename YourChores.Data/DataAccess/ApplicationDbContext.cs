@@ -20,6 +20,7 @@ namespace YourChores.Data.DataAccess
             base.OnModelCreating(builder);
 
             builder.Entity<Room>().HasIndex(room => room.RoomName).IsUnique();
+            builder.Entity<Room>().HasIndex(room => room.NormalizedRoomName).IsUnique();
         }
 
         public DbSet<Room> Rooms { get; set; }

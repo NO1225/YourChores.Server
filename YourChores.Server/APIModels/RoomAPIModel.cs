@@ -46,8 +46,28 @@ namespace YourChores.Server.APIModels
         /// <summary>
         /// The detailed response model
         /// </summary>
-        public class DetailedResponse:Response
+        public class DetailedResponse
         {
+            /// <summary>
+            /// The id of the requested room
+            /// </summary>
+            public int RoomId { get; set; }
+
+            /// <summary>
+            /// The name of the requested room
+            /// </summary>
+            public string RoomName { get; set; }
+
+            /// <summary>
+            /// If the requested room allow members to post
+            /// </summary>
+            public bool AllowMembersToPost { get; set; }
+
+            /// <summary>
+            /// If the current user is the owner of this room
+            /// </summary>
+            public bool IsOwner { get; set; }
+
             /// <summary>
             /// The members of this room
             /// </summary>

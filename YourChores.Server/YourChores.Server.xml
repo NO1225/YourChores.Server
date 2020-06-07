@@ -267,6 +267,26 @@
             The detailed response model
             </summary>
         </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.DetailedResponse.RoomId">
+            <summary>
+            The id of the requested room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.DetailedResponse.RoomName">
+            <summary>
+            The name of the requested room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.DetailedResponse.AllowMembersToPost">
+            <summary>
+            If the requested room allow members to post
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.DetailedResponse.IsOwner">
+            <summary>
+            If the current user is the owner of this room
+            </summary>
+        </member>
         <member name="P:YourChores.Server.APIModels.RoomAPIModel.DetailedResponse.RoomMembers">
             <summary>
             The members of this room
@@ -462,7 +482,7 @@
             <param name="id">The id of the room</param>
             <returns></returns>
         </member>
-        <member name="M:YourChores.Server.Controllers.RoomsController.GetRoomByName(System.String)">
+        <member name="M:YourChores.Server.Controllers.RoomsController.GetRoomsByName(System.String)">
             <summary>
             End point to get the details of a room by Name
             </summary>
