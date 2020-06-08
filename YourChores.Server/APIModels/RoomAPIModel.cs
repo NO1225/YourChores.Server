@@ -101,6 +101,11 @@ namespace YourChores.Server.APIModels
         public class Chore
         {
             /// <summary>
+            /// The id of this chore
+            /// </summary>
+            public int ChoreId { get; set; }
+
+            /// <summary>
             /// Chore description
             /// </summary>
             public string Description { get; set; }

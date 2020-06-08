@@ -206,6 +206,7 @@ namespace YourChores.Server.Controllers
                         // Gettig the chores in this room
                         Chores = room.ToDoItems.Select(toDoItem => new RoomAPIModel.Chore()
                         {
+                            ChoreId = toDoItem.Id,
                             Description = toDoItem.Description,
                             Done = toDoItem.Done,
                             Urgency = toDoItem.Urgency
