@@ -121,5 +121,46 @@ namespace YourChores.Server.APIModels
             public Urgency Urgency { get; set; }
 
         }
+
+        /// <summary>
+        /// The breif response model
+        /// </summary>
+        public class SearchRoomResponse
+        {
+            /// <summary>
+            /// The id of the requested room
+            /// </summary>
+            public int RoomId { get; set; }
+
+            /// <summary>
+            /// The name of the requested room
+            /// </summary>
+            public string RoomName { get; set; }
+
+            /// <summary>
+            /// Number of members in this room
+            /// </summary>
+            public int NumberOfMembers { get; set; }
+
+            /// <summary>
+            /// Maximum alowed members in this room
+            /// </summary>
+            public int MaxAllowedMembers { get; set; }
+
+            /// <summary>
+            /// If the user is a member of this room
+            /// </summary>
+            public bool IsMember { get; set; }
+
+            /// <summary>
+            /// If there is already a join request sent to this room
+            /// </summary>
+            public bool JoinRequestSent { get; set; }
+
+            /// <summary>
+            /// If there is already an invite from this room
+            /// </summary>
+            public bool IsInvited { get; set; }
+        }
     }
 }

@@ -225,17 +225,22 @@ namespace YourChores.Server.Controllers
         /// <param name="name">The name of the room</param>
         /// <returns></returns>
         [HttpGet("getRoomsByName/{name}")]
-        public async Task<ActionResult<APIResponse<List<RoomAPIModel.DetailedResponse>>>> GetRoomsByName(string name)
+        public async Task<ActionResult<APIResponse<List<RoomAPIModel.SearchRoomResponse>>>> GetRoomsByName(string name)
         {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
             // Initiate the response model
-            var responseModel = new APIResponse<List<RoomAPIModel.DetailedResponse>>();
+            var responseModel = new APIResponse<List<RoomAPIModel.SearchRoomResponse>>();
 
             var normalizedName = name.ToLower();
 
             // Get all the rooms
-            responseModel.Response = await _context.Rooms
-                // Include the room chores (join)
-                .Include(room => room.ToDoItems)
+            responseModel.Response = await _context.Rooms                
+                // Include the join requests
+                .Include(room => room.RoomJoinRequests)
+                // Include the user of the join request (join)
+                .ThenInclude(roomJoinRequest => roomJoinRequest.User)
                 // Include the room users (join)
                 .Include(room => room.RoomUsers)
                 // Include the user of room user (join)
@@ -245,27 +250,16 @@ namespace YourChores.Server.Controllers
                 // Assign it to our response
                 .Select(room =>
                 // Our response
-                    new RoomAPIModel.DetailedResponse()
+                    new RoomAPIModel.SearchRoomResponse()
                     {
                         // Assign the id
                         RoomId = room.Id,
                         RoomName = room.RoomName,
-                        AllowMembersToPost = room.AllowMembersToPost,
-                        // Getting the members and assigning them to our member response
-                        RoomMembers = room.RoomUsers.Select(roomUser =>
-                            new RoomAPIModel.RoomMember()
-                            {
-                                FirstName = roomUser.User.Firstname,
-                                LastName = roomUser.User.Lastname
-                            }
-                        ).ToList(),
-                        // Gettig the chores in this room
-                        Chores = room.ToDoItems.Select(toDoItem => new RoomAPIModel.Chore()
-                        {
-                            Description = toDoItem.Description,
-                            Done = toDoItem.Done,
-                            Urgency = toDoItem.Urgency
-                        }).ToList()
+                        MaxAllowedMembers = MAX_ROOM_USERS,
+                        NumberOfMembers = room.RoomUsers.Count,
+                        IsMember = room.RoomUsers.Any(roomUser=>roomUser.User.Id == user.Id),
+                        JoinRequestSent = room.RoomJoinRequests.Any(roomJoinRequest=>roomJoinRequest.User.Id == user.Id &&roomJoinRequest.JoinRequestType == JoinRequestType.Join),
+                        IsInvited = room.RoomJoinRequests.Any(roomJoinRequest=>roomJoinRequest.User.Id == user.Id &&roomJoinRequest.JoinRequestType == JoinRequestType.Invite),
                     }
                     // Return the room
                 ).ToListAsync();

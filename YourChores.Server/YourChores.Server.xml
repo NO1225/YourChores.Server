@@ -337,6 +337,46 @@
             The urgency of the chore (1:low, 2:medium, 3:high)
             </summary>
         </member>
+        <member name="T:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse">
+            <summary>
+            The breif response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse.RoomId">
+            <summary>
+            The id of the requested room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse.RoomName">
+            <summary>
+            The name of the requested room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse.NumberOfMembers">
+            <summary>
+            Number of members in this room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse.MaxAllowedMembers">
+            <summary>
+            Maximum alowed members in this room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse.IsMember">
+            <summary>
+            If the user is a member of this room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse.JoinRequestSent">
+            <summary>
+            If there is already a join request sent to this room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse.IsInvited">
+            <summary>
+            If there is already an invite from this room
+            </summary>
+        </member>
         <member name="T:YourChores.Server.APIModels.UserAPIModel">
             <summary>
             API Model to return the user information
