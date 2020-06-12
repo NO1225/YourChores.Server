@@ -199,8 +199,10 @@ namespace YourChores.Server.Controllers
                         RoomMembers = room.RoomUsers.Select(roomUser =>
                             new RoomAPIModel.RoomMember()
                             {
+                                UserId = roomUser.User.Id,
                                 FirstName = roomUser.User.Firstname,
-                                LastName = roomUser.User.Lastname
+                                LastName = roomUser.User.Lastname,
+                                IsOwner = roomUser.Owner,
                             }
                         ).ToList(),
                         // Gettig the chores in this room
@@ -481,6 +483,190 @@ namespace YourChores.Server.Controllers
             await _context.SaveChangesAsync();
 
             // Return success
+            return Ok(responseModel);
+        }
+
+        /// <summary>
+        /// End point to allow the members to leave a room
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost("Leave")]
+        public async Task<ActionResult<APIResponse>> LeaveRoom(LeaveRoomAPIModel.Request requestModel)
+        {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var responseModel = new APIResponse();
+
+            var room = await _context.Rooms
+                // Include the room users (join)
+                .Include(room => room.RoomUsers)
+                // Include the user of room user (join)
+                .ThenInclude(roomUser => roomUser.User)
+                // Select the required room and make sure that this user is a member of it
+                .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId && room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id));
+
+            // Checck if the user is a member of this room and the room exist
+            if (room == null)
+            {
+                responseModel.AddError("Invlid room Id");
+
+                return responseModel;
+            }
+
+            // get the record of the current user
+            var roomUser = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id);
+
+            // Check if this user is the last owner of this room
+            if (room.RoomUsers.FirstOrDefault(roomUser=>roomUser.User.Id == user.Id).Owner 
+                && room.RoomUsers.Where(roomUser=>roomUser.Owner).Count()<2
+                && room.RoomUsers.Count()>1)
+            {
+
+                var alternativeRoomUser = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == requestModel.AlternativeId);
+
+                if(alternativeRoomUser == null)
+                {
+                    responseModel.AddError("You are the last owner of this room, please provide the alternative user Id");
+
+                    return responseModel;
+                }
+
+                // check the alternative id, assign him as owner
+                alternativeRoomUser.Owner = true;
+
+                // reomve it from the database and save chagnes
+                _context.RoomUsers.Remove(roomUser);
+                await _context.SaveChangesAsync();
+
+                // Return the response
+                return Ok(responseModel);
+            }
+
+            // If this user is the last user in the room, delete it
+            if (room.RoomUsers.Count() <2)
+            {
+                // reomve it from the database and save chagnes
+                _context.RoomUsers.Remove(roomUser);
+                _context.Rooms.Remove(room);
+
+                await _context.SaveChangesAsync();
+
+                // Return the response
+                return Ok(responseModel);
+            }
+
+            // reomve it from the database and save chagnes
+            _context.RoomUsers.Remove(roomUser);
+
+            await _context.SaveChangesAsync();
+
+            // Return the response
+            return Ok(responseModel);
+        }
+
+        /// <summary>
+        /// End point to allow the owner of a room to kick other users
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost("Kick")]
+        public async Task<ActionResult<APIResponse>> KickUser(KickUserAPIModel.Request requestModel)
+        {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var responseModel = new APIResponse();
+
+            if(user.Id == requestModel.UserId)
+            {
+                responseModel.AddError("You can't kick yourself");
+
+                // Return the response
+                return responseModel;
+            }
+
+            var room = await _context.Rooms
+               // Include the room users (join)
+               .Include(room => room.RoomUsers)
+               // Include the user of room user (join)
+               .ThenInclude(roomUser => roomUser.User)
+               // Select the required room and make sure that this user is a member of it
+               .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId && 
+               room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) && 
+               room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner);
+
+            // Checck if the user is a member of this room and the room exist
+            if (room == null)
+            {
+                responseModel.AddError("Invlid room Id");
+
+                // Return the response
+                return responseModel;
+            }
+
+            // get the record of the current user
+            var roomUser = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == requestModel.UserId);
+
+            if(roomUser == null)
+            {
+                responseModel.AddError("The user is not a member of this room");
+
+                // Return the response
+                return responseModel;
+            }
+
+            // Remove the record of the user to this room & save changes
+            _context.RoomUsers.Remove(roomUser);
+            await _context.SaveChangesAsync();
+
+            // Return the response
+            return responseModel;
+
+        }
+
+        /// <summary>
+        /// End point to update the settings of the room
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost("Update")]
+        public async Task<ActionResult<APIResponse<UpdateRoomAPIModel.Response>>> UpdateRoom(UpdateRoomAPIModel.Request requestModel)
+        {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var responseModel = new APIResponse<UpdateRoomAPIModel.Response>();
+
+            var room = await _context.Rooms
+               // Include the room users (join)
+               .Include(room => room.RoomUsers)
+               // Include the user of room user (join)
+               .ThenInclude(roomUser => roomUser.User)
+               // Select the required room and make sure that this user is a member of it
+               .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId &&
+               room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) &&
+               room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner);
+
+            // Checck if the user is a member of this room and the room exist
+            if (room == null)
+            {
+                responseModel.AddError("Invlid room Id");
+
+                // Return the response
+                return responseModel;
+            }
+
+            room.AllowMembersToPost = requestModel.AllowMembersToPost;
+            await _context.SaveChangesAsync();
+
+            responseModel.Response = new UpdateRoomAPIModel.Response()
+            {
+                RoomName = room.RoomName,
+                AllowMembersToPost = room.AllowMembersToPost,
+            };
+
             return Ok(responseModel);
         }
 

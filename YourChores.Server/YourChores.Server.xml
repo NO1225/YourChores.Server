@@ -152,6 +152,46 @@
             </summary>
             <example>1</example>
         </member>
+        <member name="T:YourChores.Server.APIModels.KickUserAPIModel">
+            <summary>
+            API Model for the Kicking a member outside the room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.KickUserAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.KickUserAPIModel.Request.RoomId">
+            <summary>
+            The id of the room we are going to leave
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.KickUserAPIModel.Request.UserId">
+            <summary>
+            The id of the user who shull be kicked
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.LeaveRoomAPIModel">
+            <summary>
+            API Model for the rooms end point
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.LeaveRoomAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.LeaveRoomAPIModel.Request.RoomId">
+            <summary>
+            The id of the room we are going to leave
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.LeaveRoomAPIModel.Request.AlternativeId">
+            <summary>
+            The id of the user who should replace us of we were the last owner of this room, and the room has other user
+            </summary>
+        </member>
         <member name="T:YourChores.Server.APIModels.LoginAPIModel">
             <summary>
             API Model for the login
@@ -302,6 +342,11 @@
             Room member response model
             </summary>
         </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.RoomMember.UserId">
+            <summary>
+            The id of the member
+            </summary>
+        </member>
         <member name="P:YourChores.Server.APIModels.RoomAPIModel.RoomMember.FirstName">
             <summary>
             The first name of the member
@@ -310,6 +355,11 @@
         <member name="P:YourChores.Server.APIModels.RoomAPIModel.RoomMember.LastName">
             <summary>
             The last name of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.RoomMember.IsOwner">
+            <summary>
+            If this member is an owner to this room
             </summary>
         </member>
         <member name="T:YourChores.Server.APIModels.RoomAPIModel.Chore">
@@ -375,6 +425,41 @@
         <member name="P:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse.IsInvited">
             <summary>
             If there is already an invite from this room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.UpdateRoomAPIModel">
+            <summary>
+            API model for creating a room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.UpdateRoomAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UpdateRoomAPIModel.Request.RoomId">
+            <summary>
+            The id of the room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UpdateRoomAPIModel.Request.AllowMembersToPost">
+            <summary>
+            Giving the ability to room members to share chores
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.UpdateRoomAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UpdateRoomAPIModel.Response.RoomName">
+            <summary>
+            The created room name
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UpdateRoomAPIModel.Response.AllowMembersToPost">
+            <summary>
+            if the created room allow members to post
             </summary>
         </member>
         <member name="T:YourChores.Server.APIModels.UserAPIModel">
@@ -544,6 +629,27 @@
         <member name="M:YourChores.Server.Controllers.RoomsController.InviteUser(YourChores.Server.APIModels.InviteUserRequestAPIModel.Request)">
             <summary>
             End point so that the room room owner can invite users to the room
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.LeaveRoom(YourChores.Server.APIModels.LeaveRoomAPIModel.Request)">
+            <summary>
+            End point to allow the members to leave a room
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.KickUser(YourChores.Server.APIModels.KickUserAPIModel.Request)">
+            <summary>
+            End point to allow the owner of a room to kick other users
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.UpdateRoom(YourChores.Server.APIModels.UpdateRoomAPIModel.Request)">
+            <summary>
+            End point to update the settings of the room
             </summary>
             <param name="requestModel"></param>
             <returns></returns>

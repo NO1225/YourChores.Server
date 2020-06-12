@@ -85,6 +85,11 @@ namespace YourChores.Server.APIModels
         public class RoomMember
         {
             /// <summary>
+            /// The id of the member
+            /// </summary>
+            public string UserId { get; set; }
+
+            /// <summary>
             /// The first name of the member
             /// </summary>
             public string FirstName { get; set; }
@@ -93,6 +98,11 @@ namespace YourChores.Server.APIModels
             /// The last name of the member
             /// </summary>
             public string LastName { get; set; }
+
+            /// <summary>
+            /// If this member is an owner to this room
+            /// </summary>
+            public bool IsOwner { get; set; }
         }
 
         /// <summary>
