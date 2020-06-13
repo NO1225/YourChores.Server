@@ -21,7 +21,6 @@ namespace YourChores.Server.APIModels
             /// </summary>
             /// <example>firstName</example>
             [MaxLength(50)]
-            [Required]
             public string Firstname { get; set; }
 
             /// <summary>
@@ -29,7 +28,6 @@ namespace YourChores.Server.APIModels
             /// </summary>
             /// <example>lastName</example>
             [MaxLength(50)]
-            [Required]
             public string Lastname { get; set; }
         }
 

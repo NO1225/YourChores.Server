@@ -188,10 +188,18 @@ namespace YourChores.Server.Controllers
         {
             // Get the user
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
+            
             // Change the user first and last name
-            user.Firstname = requestModel.Firstname;
-            user.Lastname = requestModel.Lastname;
+            if (!string.IsNullOrWhiteSpace(requestModel.Firstname))
+            {
+                user.Firstname = requestModel.Firstname;
+            }
+            
+            // Change the user first and last name
+            if (!string.IsNullOrWhiteSpace(requestModel.Lastname))
+            {
+                user.Lastname = requestModel.Lastname;
+            }
 
             // Update
             await _userManager.UpdateAsync(user);
