@@ -194,7 +194,7 @@ namespace YourChores.Server.Controllers
                         RoomName = room.RoomName,
                         AllowMembersToPost = room.AllowMembersToPost,
                         // If the current user is the owner of this room
-                        IsOwner = room.RoomUsers.FirstOrDefault(roomUser=>roomUser.User.Id == user.Id).Owner,
+                        IsOwner = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner,
                         // Getting the members and assigning them to our member response
                         RoomMembers = room.RoomUsers.Select(roomUser =>
                             new RoomAPIModel.RoomMember()
@@ -238,7 +238,7 @@ namespace YourChores.Server.Controllers
             var normalizedName = name.ToLower();
 
             // Get all the rooms
-            responseModel.Response = await _context.Rooms                
+            responseModel.Response = await _context.Rooms
                 // Include the join requests
                 .Include(room => room.RoomJoinRequests)
                 // Include the user of the join request (join)
@@ -259,9 +259,9 @@ namespace YourChores.Server.Controllers
                         RoomName = room.RoomName,
                         MaxAllowedMembers = MAX_ROOM_USERS,
                         NumberOfMembers = room.RoomUsers.Count,
-                        IsMember = room.RoomUsers.Any(roomUser=>roomUser.User.Id == user.Id),
-                        JoinRequestSent = room.RoomJoinRequests.Any(roomJoinRequest=>roomJoinRequest.User.Id == user.Id &&roomJoinRequest.JoinRequestType == JoinRequestType.Join),
-                        IsInvited = room.RoomJoinRequests.Any(roomJoinRequest=>roomJoinRequest.User.Id == user.Id &&roomJoinRequest.JoinRequestType == JoinRequestType.Invite),
+                        IsMember = room.RoomUsers.Any(roomUser => roomUser.User.Id == user.Id),
+                        JoinRequestSent = room.RoomJoinRequests.Any(roomJoinRequest => roomJoinRequest.User.Id == user.Id && roomJoinRequest.JoinRequestType == JoinRequestType.Join),
+                        IsInvited = room.RoomJoinRequests.Any(roomJoinRequest => roomJoinRequest.User.Id == user.Id && roomJoinRequest.JoinRequestType == JoinRequestType.Invite),
                     }
                     // Return the room
                 ).ToListAsync();
@@ -519,14 +519,14 @@ namespace YourChores.Server.Controllers
             var roomUser = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id);
 
             // Check if this user is the last owner of this room
-            if (room.RoomUsers.FirstOrDefault(roomUser=>roomUser.User.Id == user.Id).Owner 
-                && room.RoomUsers.Where(roomUser=>roomUser.Owner).Count()<2
-                && room.RoomUsers.Count()>1)
+            if (room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner
+                && room.RoomUsers.Where(roomUser => roomUser.Owner).Count() < 2
+                && room.RoomUsers.Count() > 1)
             {
 
                 var alternativeRoomUser = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == requestModel.AlternativeId);
 
-                if(alternativeRoomUser == null)
+                if (alternativeRoomUser == null)
                 {
                     responseModel.AddError("You are the last owner of this room, please provide the alternative user Id");
 
@@ -545,7 +545,7 @@ namespace YourChores.Server.Controllers
             }
 
             // If this user is the last user in the room, delete it
-            if (room.RoomUsers.Count() <2)
+            if (room.RoomUsers.Count() < 2)
             {
                 // reomve it from the database and save chagnes
                 _context.RoomUsers.Remove(roomUser);
@@ -579,7 +579,7 @@ namespace YourChores.Server.Controllers
 
             var responseModel = new APIResponse();
 
-            if(user.Id == requestModel.UserId)
+            if (user.Id == requestModel.UserId)
             {
                 responseModel.AddError("You can't kick yourself");
 
@@ -593,8 +593,8 @@ namespace YourChores.Server.Controllers
                // Include the user of room user (join)
                .ThenInclude(roomUser => roomUser.User)
                // Select the required room and make sure that this user is a member of it
-               .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId && 
-               room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) && 
+               .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId &&
+               room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) &&
                room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner);
 
             // Checck if the user is a member of this room and the room exist
@@ -609,7 +609,7 @@ namespace YourChores.Server.Controllers
             // get the record of the current user
             var roomUser = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == requestModel.UserId);
 
-            if(roomUser == null)
+            if (roomUser == null)
             {
                 responseModel.AddError("The user is not a member of this room");
 
@@ -667,6 +667,170 @@ namespace YourChores.Server.Controllers
                 AllowMembersToPost = room.AllowMembersToPost,
             };
 
+            return Ok(responseModel);
+        }
+
+        /// <summary>
+        /// End point to allow the owners of the room to promote other members
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost("Promote")]
+        public async Task<ActionResult<APIResponse>> PromoteMember(PromoteUserAPIModel.Request requestModel)
+        {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var responseModel = new APIResponse();
+
+            if (user.Id == requestModel.UserId)
+            {
+                responseModel.AddError("You can't promote yourself");
+
+                // Return the response
+                return responseModel;
+            }
+
+            var room = await _context.Rooms
+               // Include the room users (join)
+               .Include(room => room.RoomUsers)
+               // Include the user of room user (join)
+               .ThenInclude(roomUser => roomUser.User)
+               // Select the required room and make sure that this user is a member of it
+               .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId &&
+               room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) &&
+               room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner);
+
+            // Checck if the user is a member of this room and the room exist
+            if (room == null)
+            {
+                responseModel.AddError("Invlid room Id");
+
+                // Return the response
+                return responseModel;
+            }
+
+            // get the record of the current user
+            var roomUser = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == requestModel.UserId && !roomUser.Owner);
+
+            if (roomUser == null)
+            {
+                responseModel.AddError("The user is not a member of this room");
+
+                // Return the response
+                return responseModel;
+            }
+
+            // Promote the user
+            roomUser.Owner = true;
+
+            // save the changes
+            await _context.SaveChangesAsync();
+
+            // Return the response
+            return Ok(responseModel);
+        }
+
+
+        /// <summary>
+        /// End point to allow the owners of the room to demote other owners
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost("Demote")]
+        public async Task<ActionResult<APIResponse>> DemoteOwner(DemoteOwnerAPIModel.Request requestModel)
+        {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var responseModel = new APIResponse();
+
+            var room = await _context.Rooms
+               // Include the room users (join)
+               .Include(room => room.RoomUsers)
+               // Include the user of room user (join)
+               .ThenInclude(roomUser => roomUser.User)
+               // Select the required room and make sure that this user is a member of it
+               .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId &&
+               room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) &&
+               room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner);
+
+            // Checck if the user is a member of this room and the room exist
+            if (room == null)
+            {
+                responseModel.AddError("Invlid room Id");
+
+                // Return the response
+                return responseModel;
+            }
+
+            // get the record of the current user
+            var roomUser = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == requestModel.UserId && roomUser.Owner);
+
+            if (roomUser == null)
+            {
+                responseModel.AddError("The user is not an owner for this room");
+
+                // Return the response
+                return responseModel;
+            }
+
+            // Promote the user
+            roomUser.Owner = false;
+
+            // save the changes
+            await _context.SaveChangesAsync();
+
+            // Return the response
+            return Ok(responseModel);
+        }
+
+        /// <summary>
+        /// End point to search for a members for this room
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost("FindMember")]
+        public async Task<ActionResult<APIResponse<List<SearchMemberAPIModel.Response>>>> GetMemberByUserName(SearchMemberAPIModel.Request requestModel)
+        {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var responseModel = new APIResponse<List<SearchMemberAPIModel.Response>>();
+
+            var room = await _context.Rooms
+               // Include the room users (join)
+               .Include(room => room.RoomUsers)
+               // Include the user of room user (join)
+               .ThenInclude(roomUser => roomUser.User)
+               // Select the required room and make sure that this user is a member of it
+               .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId &&
+               room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) &&
+               room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner);
+
+            // Checck if the user is a member of this room and the room exist
+            if (room == null)
+            {
+                responseModel.AddError("Invlid room Id");
+
+                // Return the response
+                return responseModel;
+            }
+
+            var userName = requestModel.userName.ToUpper();
+
+            responseModel.Response = _context.Users.Where(user => user.NormalizedUserName.Contains(userName))
+                .Select(user => new SearchMemberAPIModel.Response()
+                {
+                    UserId = user.Id,
+                    FirstName = user.Firstname,
+                    LastName = user.Lastname,
+                    UserName = user.UserName,
+                    IsMember = room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id)
+                }).ToList();
+
+
+            // Returning the response
             return Ok(responseModel);
         }
 

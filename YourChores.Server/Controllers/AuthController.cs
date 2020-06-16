@@ -137,7 +137,8 @@ namespace YourChores.Server.Controllers
                 // Return the response with the generated token
                 responseModel.Response = new LoginAPIModel.Response()
                 {
-                    Token = GenerateJSONWebToken(user)
+                    Token = GenerateJSONWebToken(user),
+                    UserId = user.Id
                 };
 
                 return Ok(responseModel);
@@ -169,7 +170,9 @@ namespace YourChores.Server.Controllers
             // Return the response with the generated token
             responseModel.Response = new LoginAPIModel.Response()
             {
-                Token = GenerateJSONWebToken(user)
+                Token = GenerateJSONWebToken(user),
+                UserId = user.Id
+
             };
 
             return Ok(responseModel);

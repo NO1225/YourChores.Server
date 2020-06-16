@@ -114,6 +114,26 @@
             if the created room allow members to post
             </summary>
         </member>
+        <member name="T:YourChores.Server.APIModels.DemoteOwnerAPIModel">
+            <summary>
+            API Model for the Kicking a member outside the room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.DemoteOwnerAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.DemoteOwnerAPIModel.Request.RoomId">
+            <summary>
+            The id of the room we are managing
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.DemoteOwnerAPIModel.Request.UserId">
+            <summary>
+            The id of the owner we are going to demote
+            </summary>
+        </member>
         <member name="T:YourChores.Server.APIModels.InviteUserRequestAPIModel">
             <summary>
             Api model to invite a user to join a toom
@@ -222,6 +242,31 @@
         <member name="P:YourChores.Server.APIModels.LoginAPIModel.Response.Token">
             <summary>
             The authorization token
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.LoginAPIModel.Response.UserId">
+            <summary>
+            The id of the logged in user
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.PromoteUserAPIModel">
+            <summary>
+            API Model for the Kicking a member outside the room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.PromoteUserAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.PromoteUserAPIModel.Request.RoomId">
+            <summary>
+            The id of the room we are managing
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.PromoteUserAPIModel.Request.UserId">
+            <summary>
+            The id of the user who shull be promoted
             </summary>
         </member>
         <member name="T:YourChores.Server.APIModels.RegisterAPIModel">
@@ -425,6 +470,56 @@
         <member name="P:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse.IsInvited">
             <summary>
             If there is already an invite from this room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.SearchMemberAPIModel">
+            <summary>
+            API model for creating a room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.SearchMemberAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.SearchMemberAPIModel.Request.RoomId">
+            <summary>
+            The id of the room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.SearchMemberAPIModel.Request.userName">
+            <summary>
+            The user name of the member we are trying to find
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.SearchMemberAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.SearchMemberAPIModel.Response.UserId">
+            <summary>
+            The id of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.SearchMemberAPIModel.Response.FirstName">
+            <summary>
+            The first name of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.SearchMemberAPIModel.Response.LastName">
+            <summary>
+            The last name of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.SearchMemberAPIModel.Response.UserName">
+            <summary>
+            The User name of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.SearchMemberAPIModel.Response.IsMember">
+            <summary>
+            If this user is a member of the room
             </summary>
         </member>
         <member name="T:YourChores.Server.APIModels.UpdateRoomAPIModel">
@@ -650,6 +745,27 @@
         <member name="M:YourChores.Server.Controllers.RoomsController.UpdateRoom(YourChores.Server.APIModels.UpdateRoomAPIModel.Request)">
             <summary>
             End point to update the settings of the room
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.PromoteMember(YourChores.Server.APIModels.PromoteUserAPIModel.Request)">
+            <summary>
+            End point to allow the owners of the room to promote other members
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.DemoteOwner(YourChores.Server.APIModels.DemoteOwnerAPIModel.Request)">
+            <summary>
+            End point to allow the owners of the room to demote other owners
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.GetMemberByUserName(YourChores.Server.APIModels.SearchMemberAPIModel.Request)">
+            <summary>
+            End point to search for a members for this room
             </summary>
             <param name="requestModel"></param>
             <returns></returns>

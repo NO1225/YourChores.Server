@@ -38,6 +38,11 @@ namespace YourChores.Server.APIModels
             /// The authorization token
             /// </summary>
             public string Token { get; set; }
+
+            /// <summary>
+            /// The id of the logged in user
+            /// </summary>
+            public string UserId { get; set; }
         }
     }
 }
