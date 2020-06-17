@@ -55,6 +55,16 @@ namespace YourChores.Server.APIModels
             /// If this user is a member of the room
             /// </summary>
             public bool IsMember { get; set; }
+
+            /// <summary>
+            /// If this user is already invited to this room
+            /// </summary>
+            public bool IsInvited { get; set; }
+
+            /// <summary>
+            /// If this user has already sent a join request
+            /// </summary>
+            public bool IsRequestingJoin { get; set; }
         }
 
     }

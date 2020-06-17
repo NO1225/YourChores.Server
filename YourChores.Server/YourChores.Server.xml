@@ -522,6 +522,16 @@
             If this user is a member of the room
             </summary>
         </member>
+        <member name="P:YourChores.Server.APIModels.SearchMemberAPIModel.Response.IsInvited">
+            <summary>
+            If this user is already invited to this room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.SearchMemberAPIModel.Response.IsRequestingJoin">
+            <summary>
+            If this user has already sent a join request
+            </summary>
+        </member>
         <member name="T:YourChores.Server.APIModels.UpdateRoomAPIModel">
             <summary>
             API model for creating a room

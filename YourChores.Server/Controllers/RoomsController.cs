@@ -812,6 +812,10 @@ namespace YourChores.Server.Controllers
                .Include(room => room.RoomUsers)
                // Include the user of room user (join)
                .ThenInclude(roomUser => roomUser.User)
+               // Include the room users (join)
+               .Include(room => room.RoomJoinRequests)
+               // Include the user of room user (join)
+               .ThenInclude(roomJoinRequest => roomJoinRequest.User)
                // Select the required room and make sure that this user is a member of it
                .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId &&
                room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) &&
@@ -828,14 +832,17 @@ namespace YourChores.Server.Controllers
 
             var userName = requestModel.userName.ToUpper();
 
-            responseModel.Response = _context.Users.Where(user => user.NormalizedUserName.Contains(userName))
+            responseModel.Response = (await _context.Users.Where(user => user.NormalizedUserName.Contains(userName))
+                .ToListAsync())
                 .Select(user => new SearchMemberAPIModel.Response()
                 {
                     UserId = user.Id,
                     FirstName = user.Firstname,
                     LastName = user.Lastname,
                     UserName = user.UserName,
-                    IsMember = room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id)
+                    IsMember = room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id),
+                    IsInvited = room.RoomJoinRequests.Where(roomJoinRequest=> roomJoinRequest.JoinRequestType == JoinRequestType.Invite).Select(roomUser => roomUser.User.Id).Contains(user.Id),
+                    IsRequestingJoin = room.RoomJoinRequests.Where(roomJoinRequest => roomJoinRequest.JoinRequestType == JoinRequestType.Join).Select(roomUser => roomUser.User.Id).Contains(user.Id),
                 }).ToList();
 
 
