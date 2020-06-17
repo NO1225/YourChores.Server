@@ -775,6 +775,15 @@ namespace YourChores.Server.Controllers
                 return responseModel;
             }
 
+            // Check if the user we are going to demote is the last owner of this room (by default, it's the logged in user)
+            if(roomUser.User.Id == user.Id && room.RoomUsers.Where(roomUser=>roomUser.Owner).Count()==1)
+            {
+                responseModel.AddError("You are the last owner of this room, you can't demote yourself");
+
+                // Return the response
+                return responseModel;
+            }
+
             // Promote the user
             roomUser.Owner = false;
 
