@@ -4,6 +4,26 @@
         <name>YourChores.Server</name>
     </assembly>
     <members>
+        <member name="T:YourChores.Server.APIModels.AcceptRequestAPIModel">
+            <summary>
+            API Model for the Kicking a member outside the room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.AcceptRequestAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AcceptRequestAPIModel.Request.RoomId">
+            <summary>
+            The id of the room we are managing
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AcceptRequestAPIModel.Request.JoinRequestId">
+            <summary>
+            The id of the join rquest
+            </summary>
+        </member>
         <member name="T:YourChores.Server.APIModels.APIResponse">
             <summary>
              Base response in case there is no data 
@@ -377,6 +397,11 @@
             The members of this room
             </summary>
         </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.DetailedResponse.JoinRequests">
+            <summary>
+            The join requests to this room
+            </summary>
+        </member>
         <member name="P:YourChores.Server.APIModels.RoomAPIModel.DetailedResponse.Chores">
             <summary>
             The chores of this room
@@ -405,6 +430,36 @@
         <member name="P:YourChores.Server.APIModels.RoomAPIModel.RoomMember.IsOwner">
             <summary>
             If this member is an owner to this room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RoomAPIModel.JoinRequest">
+            <summary>
+            the user who sent the join request
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.JoinRequest.JoinRequestId">
+            <summary>
+            The id of the join request
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.JoinRequest.UserId">
+            <summary>
+            The id of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.JoinRequest.FirstName">
+            <summary>
+            The first name of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.JoinRequest.LastName">
+            <summary>
+            The last name of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomAPIModel.JoinRequest.JoinRequestType">
+            <summary>
+            The type of this join request
             </summary>
         </member>
         <member name="T:YourChores.Server.APIModels.RoomAPIModel.Chore">
@@ -776,6 +831,13 @@
         <member name="M:YourChores.Server.Controllers.RoomsController.GetMemberByUserName(YourChores.Server.APIModels.SearchMemberAPIModel.Request)">
             <summary>
             End point to search for a members for this room
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.AcceptRequest(YourChores.Server.APIModels.AcceptRequestAPIModel.Request)">
+            <summary>
+            End point to allow the owners of the room accept the join request 
             </summary>
             <param name="requestModel"></param>
             <returns></returns>

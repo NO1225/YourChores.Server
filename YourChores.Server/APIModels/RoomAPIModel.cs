@@ -74,6 +74,11 @@ namespace YourChores.Server.APIModels
             public List<RoomMember> RoomMembers { get; set; }
 
             /// <summary>
+            /// The join requests to this room
+            /// </summary>
+            public List<JoinRequest> JoinRequests { get; set; }
+
+            /// <summary>
             /// The chores of this room
             /// </summary>
             public List<Chore> Chores { get; set; }
@@ -103,6 +108,38 @@ namespace YourChores.Server.APIModels
             /// If this member is an owner to this room
             /// </summary>
             public bool IsOwner { get; set; }
+        }
+        
+        /// <summary>
+        /// the user who sent the join request
+        /// </summary>
+        public class JoinRequest
+        {
+            /// <summary>
+            /// The id of the join request
+            /// </summary>
+            public int JoinRequestId { get; set; }
+
+            /// <summary>
+            /// The id of the member
+            /// </summary>
+            public string UserId { get; set; }
+
+            /// <summary>
+            /// The first name of the member
+            /// </summary>
+            public string FirstName { get; set; }
+
+            /// <summary>
+            /// The last name of the member
+            /// </summary>
+            public string LastName { get; set; }
+
+            /// <summary>
+            /// The type of this join request
+            /// </summary>
+            public JoinRequestType JoinRequestType { get; set; }
+
         }
 
         /// <summary>

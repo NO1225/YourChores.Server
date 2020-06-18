@@ -174,48 +174,122 @@ namespace YourChores.Server.Controllers
             // Initiate the response model
             var responseModel = new APIResponse<RoomAPIModel.DetailedResponse>();
 
-            // Get all the rooms
-            responseModel.Response = await _context.Rooms
-                // Include the room chores (join)
-                .Include(room => room.ToDoItems)
-                // Include the room users (join)
-                .Include(room => room.RoomUsers)
-                // Include the user of room user (join)
-                .ThenInclude(roomUser => roomUser.User)
-                // Select the required room and make sure that this user is a member of it
-                .Where(room => room.Id == id && room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id))
-                // Assign it to our response
-                .Select(room =>
-                // Our response
-                    new RoomAPIModel.DetailedResponse()
-                    {
+            var isOwner = await _context.Rooms
+               // Include the room users (join)
+               .Include(room => room.RoomUsers)
+               // Include the user of room user (join)
+               .ThenInclude(roomUser => roomUser.User)
+               // Select the required room and make sure that this user is a member of it
+               .AnyAsync(room => room.Id == id &&
+               room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) &&
+               room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner);
+
+            if(isOwner)
+            {
+                // Get all the rooms
+                responseModel.Response = await _context.Rooms
+                    // Include the room chores (join)
+                    .Include(room => room.ToDoItems)
+                    // Include the room users (join)
+                    .Include(room => room.RoomUsers)
+                    // Include the user of room user (join)
+                    .ThenInclude(roomUser => roomUser.User)
+                    // Include the join requests (join)
+                    .Include(room => room.RoomJoinRequests)
+                    // Include the user of join requests (join)
+                    .ThenInclude(roomJoinRequests => roomJoinRequests.User)
+                    // Select the required room and make sure that this user is a member of it
+                    .Where(room => room.Id == id && room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id))
+                    // Assign it to our response
+                    .Select(room =>
+                        // Our response
+                        new RoomAPIModel.DetailedResponse()
+                        {
                         // Assign the id
                         RoomId = room.Id,
-                        RoomName = room.RoomName,
-                        AllowMembersToPost = room.AllowMembersToPost,
+                            RoomName = room.RoomName,
+                            AllowMembersToPost = room.AllowMembersToPost,
                         // If the current user is the owner of this room
                         IsOwner = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner,
                         // Getting the members and assigning them to our member response
                         RoomMembers = room.RoomUsers.Select(roomUser =>
-                            new RoomAPIModel.RoomMember()
-                            {
-                                UserId = roomUser.User.Id,
-                                FirstName = roomUser.User.Firstname,
-                                LastName = roomUser.User.Lastname,
-                                IsOwner = roomUser.Owner,
-                            }
-                        ).ToList(),
+                                new RoomAPIModel.RoomMember()
+                                {
+                                    UserId = roomUser.User.Id,
+                                    FirstName = roomUser.User.Firstname,
+                                    LastName = roomUser.User.Lastname,
+                                    IsOwner = roomUser.Owner,
+                                }
+                            ).ToList(),
+                        // Getting the join request for this room
+                        JoinRequests = room.RoomJoinRequests.Select(roomJoinRequest =>
+                                new RoomAPIModel.JoinRequest()
+                                {
+                                    JoinRequestId = roomJoinRequest.Id,
+                                    UserId = roomJoinRequest.User.Id,
+                                    FirstName = roomJoinRequest.User.Firstname,
+                                    LastName = roomJoinRequest.User.Lastname,
+                                    JoinRequestType = roomJoinRequest.JoinRequestType
+                                }
+                            ).ToList(),
                         // Gettig the chores in this room
                         Chores = room.ToDoItems.Select(toDoItem => new RoomAPIModel.Chore()
-                        {
-                            ChoreId = toDoItem.Id,
-                            Description = toDoItem.Description,
-                            Done = toDoItem.Done,
-                            Urgency = toDoItem.Urgency
-                        }).ToList()
-                    }
+                            {
+                                ChoreId = toDoItem.Id,
+                                Description = toDoItem.Description,
+                                Done = toDoItem.Done,
+                                Urgency = toDoItem.Urgency
+                            }).ToList()
+                        }
                     // Return the room
-                ).FirstOrDefaultAsync();
+                    ).FirstOrDefaultAsync();
+            }
+            else
+            {
+                // Get all the rooms
+                responseModel.Response = await _context.Rooms
+                    // Include the room chores (join)
+                    .Include(room => room.ToDoItems)
+                    // Include the room users (join)
+                    .Include(room => room.RoomUsers)
+                    // Include the user of room user (join)
+                    .ThenInclude(roomUser => roomUser.User)
+                    // Select the required room and make sure that this user is a member of it
+                    .Where(room => room.Id == id && room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id))
+                    // Assign it to our response
+                    .Select(room =>
+                        // Our response
+                        new RoomAPIModel.DetailedResponse()
+                        {
+                        // Assign the id
+                        RoomId = room.Id,
+                            RoomName = room.RoomName,
+                            AllowMembersToPost = room.AllowMembersToPost,
+                        // If the current user is the owner of this room
+                        IsOwner = room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner,
+                        // Getting the members and assigning them to our member response
+                        RoomMembers = room.RoomUsers.Select(roomUser =>
+                                new RoomAPIModel.RoomMember()
+                                {
+                                    UserId = roomUser.User.Id,
+                                    FirstName = roomUser.User.Firstname,
+                                    LastName = roomUser.User.Lastname,
+                                    IsOwner = roomUser.Owner,
+                                }
+                            ).ToList(),
+                        // Gettig the chores in this room
+                        Chores = room.ToDoItems.Select(toDoItem => new RoomAPIModel.Chore()
+                            {
+                                ChoreId = toDoItem.Id,
+                                Description = toDoItem.Description,
+                                Done = toDoItem.Done,
+                                Urgency = toDoItem.Urgency
+                            }).ToList()
+                        }
+                    // Return the room
+                    ).FirstOrDefaultAsync();
+            }
+            
 
             // Returning the response
             return Ok(responseModel);
@@ -849,6 +923,68 @@ namespace YourChores.Server.Controllers
             // Returning the response
             return Ok(responseModel);
         }
+
+
+        /// <summary>
+        /// End point to allow the owners of the room accept the join request 
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost("Accept")]
+        public async Task<ActionResult<APIResponse>> AcceptRequest(AcceptRequestAPIModel.Request requestModel)
+        {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var responseModel = new APIResponse();
+
+            var room = await _context.Rooms
+               // Include the jion requests (join)
+               .Include(room => room.RoomJoinRequests)
+               // Include the user of the join request (join)
+               .ThenInclude(roomJoinRequests => roomJoinRequests.User)
+               // Select the required room and make sure that this user is a member of it
+               .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId &&
+               room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) &&
+               room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner);
+
+            // Checck if the user is a member of this room and the room exist
+            if (room == null)
+            {
+                responseModel.AddError("Invlid room Id");
+
+                // Return the response
+                return responseModel;
+            }
+
+            // get the record of the current user
+            var joinRequest = room.RoomJoinRequests.FirstOrDefault(roomJoinRequest=>roomJoinRequest.Id==requestModel.JoinRequestId && roomJoinRequest.JoinRequestType== JoinRequestType.Join);
+
+            if (joinRequest == null)
+            {
+                responseModel.AddError("This is not a join request");
+
+                // Return the response
+                return responseModel;
+            }
+
+            var roomUser = new RoomUser()
+            {
+                User = joinRequest.User,
+                Room = joinRequest.Room
+            };
+
+            await _context.RoomUsers.AddAsync(roomUser);
+
+            _context.RoomJoinRequests.Remove(joinRequest);
+
+            // save the changes
+            await _context.SaveChangesAsync();
+
+            // Return the response
+            return Ok(responseModel);
+        }
+
 
     }
 }
