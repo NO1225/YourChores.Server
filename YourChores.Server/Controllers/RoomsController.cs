@@ -508,10 +508,25 @@ namespace YourChores.Server.Controllers
                 // Check if the user has a;ready sent a join request to this room
                 .Any(roomJoinRequest => roomJoinRequest.Room.Id == requestModel.RoomId && roomJoinRequest.User.Id == requestModel.UserId && roomJoinRequest.JoinRequestType == JoinRequestType.Join))
             {
-                // TODO: redirect to the accept room request endpoint / accept
+                var requestId = (await _context.RoomJoinRequests
+                // Include the user (join)
+                .Include(roomJoinRequest => roomJoinRequest.User)
+                // Include the room (join)
+                .Include(roomJoinRequest => roomJoinRequest.Room)
+                // Check if the user has a;ready sent a join request to this room
+                .FirstOrDefaultAsync(roomJoinRequest => roomJoinRequest.Room.Id == requestModel.RoomId && roomJoinRequest.User.Id == requestModel.UserId && roomJoinRequest.JoinRequestType == JoinRequestType.Join)).Id;
 
 
-                return responseModel;
+                // TODO: Test this if it works
+
+                var passingModel = new AcceptRequestAPIModel.Request()
+                {
+                    JoinRequestId = requestId,
+                    RoomId = requestModel.RoomId
+                };
+
+                // Redirecting to the accept method
+                return RedirectToAction(nameof(AcceptRequest), passingModel);
             }
 
             // Check if the user has already receveid an invitation to this room
@@ -976,6 +991,63 @@ namespace YourChores.Server.Controllers
 
             await _context.RoomUsers.AddAsync(roomUser);
 
+            _context.RoomJoinRequests.Remove(joinRequest);
+
+            // save the changes
+            await _context.SaveChangesAsync();
+
+            // Return the response
+            return Ok(responseModel);
+        }
+
+        
+        /// <summary>
+        /// End point to allow the owners of the room to cancel sent requests
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost("CancelInvitaion")]
+        public async Task<ActionResult<APIResponse>> CancelInvitaion(CancelInvitaionAPIModel.Request requestModel)
+        {
+            // Get the current logged in user
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var responseModel = new APIResponse();
+
+            var room = await _context.Rooms
+               // Include the jion requests (join)
+               .Include(room => room.RoomJoinRequests)
+               // Include the user of the join request (join)
+               .ThenInclude(roomJoinRequests => roomJoinRequests.User)
+               // Select the required room and make sure that this user is a member of it
+               .FirstOrDefaultAsync(room => room.Id == requestModel.RoomId &&
+               room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id) &&
+               room.RoomUsers.FirstOrDefault(roomUser => roomUser.User.Id == user.Id).Owner);
+
+            // Checck if the user is a member of this room and the room exist
+            if (room == null)
+            {
+                responseModel.AddError("Invlid room Id");
+
+                // Return the response
+                return responseModel;
+            }
+
+            // get the record of the current user
+            var joinRequest = room.RoomJoinRequests
+                .FirstOrDefault(roomJoinRequest=>
+                roomJoinRequest.Id==requestModel.JoinRequestId 
+                && roomJoinRequest.JoinRequestType== JoinRequestType.Invite);
+
+            if (joinRequest == null)
+            {
+                responseModel.AddError("This is not a join request");
+
+                // Return the response
+                return responseModel;
+            }
+
+            // Remove the request
             _context.RoomJoinRequests.Remove(joinRequest);
 
             // save the changes

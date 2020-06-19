@@ -56,6 +56,26 @@
             The response data
             </summary>
         </member>
+        <member name="T:YourChores.Server.APIModels.CancelInvitaionAPIModel">
+            <summary>
+            API Model for the Kicking a member outside the room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.CancelInvitaionAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CancelInvitaionAPIModel.Request.RoomId">
+            <summary>
+            The id of the room we are managing
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CancelInvitaionAPIModel.Request.JoinRequestId">
+            <summary>
+            The id of the join rquest
+            </summary>
+        </member>
         <member name="T:YourChores.Server.APIModels.ChangeNameAPIModel">
             <summary>
             The api model for changing the first and last name of a user
@@ -838,6 +858,13 @@
         <member name="M:YourChores.Server.Controllers.RoomsController.AcceptRequest(YourChores.Server.APIModels.AcceptRequestAPIModel.Request)">
             <summary>
             End point to allow the owners of the room accept the join request 
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.CancelInvitaion(YourChores.Server.APIModels.CancelInvitaionAPIModel.Request)">
+            <summary>
+            End point to allow the owners of the room to cancel sent requests
             </summary>
             <param name="requestModel"></param>
             <returns></returns>
