@@ -118,6 +118,97 @@
             The new passward
             </summary>
         </member>
+        <member name="T:YourChores.Server.APIModels.ChoreAPIModel">
+            <summary>
+            API Model for the chores 
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.ChoreAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChoreAPIModel.Response.ChoreId">
+            <summary>
+            The id of the requested chore
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChoreAPIModel.Response.Description">
+            <summary>
+            The description of the chore
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChoreAPIModel.Response.Urgency">
+            <summary>
+            The urgency of the chore
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChoreAPIModel.Response.CreatedOn">
+            <summary>
+            The date this chore was created
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChoreAPIModel.Response.Done">
+            <summary>
+            If this chore was already done
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChoreAPIModel.Response.RoomId">
+            <summary>
+            The id of the room this chore posted in
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.ChoreAPIModel.Response.RoomName">
+            <summary>
+            The name of the room this chore posted in
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.CreateChoreAPIModel">
+            <summary>
+            API model for creating a chore
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.CreateChoreAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CreateChoreAPIModel.Request.RoomId">
+            <summary>
+            The id of the room
+            </summary>
+            <example>Adam's Home</example>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CreateChoreAPIModel.Request.Description">
+            <summary>
+            The description of the chore
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CreateChoreAPIModel.Request.Urgency">
+            <summary>
+            The urgency of the chore
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.CreateChoreAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CreateChoreAPIModel.Response.ChoreId">
+            <summary>
+            The created Chore Id
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CreateChoreAPIModel.Response.Description">
+            <summary>
+            The description of the chore
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CreateChoreAPIModel.Response.Urgency">
+            <summary>
+            The urgency of the chore
+            </summary>
+        </member>
         <member name="T:YourChores.Server.APIModels.CreateRoomAPIModel">
             <summary>
             API model for creating a room
@@ -607,6 +698,26 @@
             If this user has already sent a join request
             </summary>
         </member>
+        <member name="T:YourChores.Server.APIModels.UpdateChoreAPIModel">
+            <summary>
+            API model for creating a room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.UpdateChoreAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UpdateChoreAPIModel.Request.ChoreId">
+            <summary>
+            The id of the chore
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.UpdateChoreAPIModel.Request.RoomId">
+            <summary>
+            The id of the room
+            </summary>
+        </member>
         <member name="T:YourChores.Server.APIModels.UpdateRoomAPIModel">
             <summary>
             API model for creating a room
@@ -748,6 +859,38 @@
             A method to generate a web token for the user
             </summary>
             <param name="user">The user to generate the web token for</param>
+            <returns></returns>
+        </member>
+        <member name="T:YourChores.Server.Controllers.ChoresController">
+            <summary>
+            Controller in charge of all the operation related to chores
+            </summary>
+        </member>
+        <member name="M:YourChores.Server.Controllers.ChoresController.#ctor(YourChores.Data.DataAccess.ApplicationDbContext,Microsoft.AspNetCore.Identity.UserManager{YourChores.Data.Models.ApplicationUser})">
+            <summary>
+            Defautl constructor
+            </summary>
+            <param name="context"></param>
+            <param name="userManager"></param>
+        </member>
+        <member name="M:YourChores.Server.Controllers.ChoresController.CreateChore(YourChores.Server.APIModels.CreateChoreAPIModel.Request)">
+            <summary>
+            End point to allow the user to create a new chore
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.ChoresController.GetChores">
+            <summary>
+            End point to get all the chores for this user
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.ChoresController.UpdateChore(YourChores.Server.APIModels.UpdateChoreAPIModel.Request)">
+            <summary>
+            End point to update the chore
+            </summary>
+            <param name="requestModel"></param>
             <returns></returns>
         </member>
         <member name="T:YourChores.Server.Controllers.RoomsController">
