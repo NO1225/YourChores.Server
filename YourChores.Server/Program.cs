@@ -33,6 +33,7 @@ namespace YourChores.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseKestrel();
                 });
     }
 }

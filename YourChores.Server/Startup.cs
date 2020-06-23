@@ -47,10 +47,27 @@ namespace YourChores.Server
         public void ConfigureServices(IServiceCollection services)
         {
 
+            string hostServer = _configuration["HOST_SERVER"] ?? "(localdb)\\MSSQLLocalDB";
+            string serverPort = _configuration["HOST_PORT"] ?? "1433";
+            string databaseName = _configuration["DATABASE_NAME"] ?? "YourChoresDb";
+            string userName = _configuration["USERNAME"];
+            string passward = _configuration["SA_PASSWORD"];
+
+            string connectionString;
+
+            if(string.IsNullOrEmpty(userName)||string.IsNullOrEmpty(passward))
+            {
+                connectionString = _configuration.GetConnectionString("Default");
+            }
+            else
+            {
+                connectionString = $"Server={hostServer},{serverPort};Database={databaseName};User Id={userName};Password={passward};";
+            }
+
             // Add the database with the deault connection string
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(_configuration.GetConnectionString("Default"));
+                options.UseSqlServer(connectionString);
             });
 
             // Adding the idintity (login/register)
@@ -143,7 +160,7 @@ namespace YourChores.Server
             app.UseAuthorization();
 
             // If is in development
-            if(env.IsDevelopment())
+            if(true||env.IsDevelopment())
             {
                 // Use swagger
                 app.UseSwagger();
