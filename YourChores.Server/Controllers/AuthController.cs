@@ -137,7 +137,7 @@ namespace YourChores.Server.Controllers
                 // Return the response with the generated token
                 responseModel.Response = new LoginAPIModel.Response()
                 {
-                    Token = GenerateJSONWebToken(user),
+                    Token = await GenerateJSONWebToken(user),
                     UserId = user.Id
                 };
 
@@ -170,7 +170,7 @@ namespace YourChores.Server.Controllers
             // Return the response with the generated token
             responseModel.Response = new LoginAPIModel.Response()
             {
-                Token = GenerateJSONWebToken(user),
+                Token = await GenerateJSONWebToken(user),
                 UserId = user.Id
 
             };
@@ -284,7 +284,7 @@ namespace YourChores.Server.Controllers
         /// </summary>
         /// <param name="user">The user to generate the web token for</param>
         /// <returns></returns>
-        private string GenerateJSONWebToken(ApplicationUser user)
+        private async Task< string> GenerateJSONWebToken(ApplicationUser user)
         {
             // Getting the security key
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -292,11 +292,15 @@ namespace YourChores.Server.Controllers
             // Getting the encryption type
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            // Getting the role of the user
+            var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+
             // Creating the token
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
               _configuration["Jwt:Audience"],
               new[] {
-                    new Claim(ClaimTypes.Name, user.UserName)
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Role, role??"user"),
                 },
               expires: DateTime.UtcNow.AddMinutes(120),
               signingCredentials: credentials);

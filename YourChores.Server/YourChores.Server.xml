@@ -56,6 +56,61 @@
             The response data
             </summary>
         </member>
+        <member name="T:YourChores.Server.APIModels.AppVersionAPIModel">
+            <summary>
+            API Model for the app version
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.AppVersionAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AppVersionAPIModel.Request.Version">
+            <summary>
+            The version of this download
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AppVersionAPIModel.Request.LowestAllowedVersion">
+            <summary>
+            THe lowest allowed version to run right now
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AppVersionAPIModel.Request.Message">
+            <summary>
+            Message to show to the user who have old version
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AppVersionAPIModel.Request.DownloadURL">
+            <summary>
+            The download link to this version
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.AppVersionAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AppVersionAPIModel.Response.Version">
+            <summary>
+            The version of this download
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AppVersionAPIModel.Response.LowestAllowedVersion">
+            <summary>
+            THe lowest allowed version to run right now
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AppVersionAPIModel.Response.Message">
+            <summary>
+            Message to show to the user who have old version
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AppVersionAPIModel.Response.DownloadURL">
+            <summary>
+            The download link to this version
+            </summary>
+        </member>
         <member name="T:YourChores.Server.APIModels.CancelInvitaionAPIModel">
             <summary>
             API Model for the Kicking a member outside the room
@@ -801,6 +856,31 @@
             <param name="config">Congigeration of the API</param>
             <returns></returns>
         </member>
+        <member name="T:YourChores.Server.Controllers.AppVersionController">
+            <summary>
+            Controller in charge of all the operation related to app version
+            </summary>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AppVersionController.#ctor(YourChores.Data.DataAccess.ApplicationDbContext,Microsoft.AspNetCore.Identity.UserManager{YourChores.Data.Models.ApplicationUser})">
+            <summary>
+            Defautl constructor
+            </summary>
+            <param name="context"></param>
+            <param name="userManager"></param>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AppVersionController.CreateNewVersion(YourChores.Server.APIModels.AppVersionAPIModel.Request)">
+            <summary>
+            End point to allow the admin to create new version
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.AppVersionController.GetLatestVersion">
+            <summary>
+            End point to get the latest version
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:YourChores.Server.Controllers.AuthController">
             <summary>
             The controller in charge of all the operation of the authentication
@@ -1047,7 +1127,7 @@
             </summary>
             <param name="services"></param>
         </member>
-        <member name="M:YourChores.Server.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+        <member name="M:YourChores.Server.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,System.IServiceProvider)">
             <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
             </summary>

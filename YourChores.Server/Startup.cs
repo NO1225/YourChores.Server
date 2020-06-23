@@ -125,7 +125,7 @@ namespace YourChores.Server
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -161,6 +161,41 @@ namespace YourChores.Server
             {
                 endpoints.MapControllers();
             });
+
+            EnsureAdminCreated(serviceProvider).GetAwaiter().GetResult();
+        }
+
+        private async Task EnsureAdminCreated(IServiceProvider serviceProvider)
+        {
+            var context = serviceProvider.GetService<ApplicationDbContext>();
+            var userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
+            var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
+
+            // ENsure database created and is up to date
+            await context.Database.MigrateAsync();
+
+            // Ensure that we have an admin role
+            var adminRoleExist = await roleManager.RoleExistsAsync("Admin");
+            if (!adminRoleExist)
+            {
+                await roleManager.CreateAsync(new IdentityRole()
+                {
+                    Name = "Admin"
+                });
+            }
+
+            // Ensure that we have an admin user
+            var adminUser = await userManager.FindByNameAsync("appAdmin");
+            if(adminUser==null)
+            {
+                var newAdminUser = new ApplicationUser()
+                {
+                    UserName = "appAdmin",
+                    Email = "appAdmin@yourchores.com"
+                };
+
+                await userManager.CreateAsync(newAdminUser, "123123123");
+            }
         }
     }
 }

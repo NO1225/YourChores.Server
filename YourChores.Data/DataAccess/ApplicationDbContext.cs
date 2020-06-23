@@ -21,12 +21,16 @@ namespace YourChores.Data.DataAccess
 
             builder.Entity<Room>().HasIndex(room => room.RoomName).IsUnique();
             builder.Entity<Room>().HasIndex(room => room.NormalizedRoomName).IsUnique();
+
+            builder.Entity<AppVersion>().HasIndex(appVersion => appVersion.Version).IsUnique();
         }
 
         public DbSet<Room> Rooms { get; set; }
         public DbSet<ToDoItem> ToDoItems { get; set; }
         public DbSet<RoomJoinRequest> RoomJoinRequests { get; set; }
         public DbSet<RoomUser> RoomUsers { get; set; }
+
+        public DbSet<AppVersion> AppVersions { get; set; }
 
     }
 }
