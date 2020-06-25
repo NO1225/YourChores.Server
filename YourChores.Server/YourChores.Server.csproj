@@ -11,20 +11,25 @@
     <DocumentationFile>YourChores.Server.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>YourChores.Server.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\YourChores.Data\YourChores.Data.csproj" />
+    <ProjectReference Include="..\YourChores.Relational.MySQL\YourChores.Relational.MySQL.csproj" />
   </ItemGroup>
 
 

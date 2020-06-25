@@ -5,14 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200531044959_finishing the database.cs" />
-    <Compile Remove="Migrations\20200531044959_finishing the database.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
   </ItemGroup>
 
 </Project>

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YourChores.Data.DataAccess;
 
-namespace YourChores.Data.Migrations
+namespace YourChores.Relational.MSSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200607154044_adding normalized room name column")]
+    partial class addingnormalizedroomnamecolumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,40 +150,6 @@ namespace YourChores.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("YourChores.Data.Models.AppVersion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DownloadURL")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(700)")
-                        .HasMaxLength(700);
-
-                    b.Property<int>("LowestAllowedVersion")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(700)")
-                        .HasMaxLength(700);
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Version")
-                        .IsUnique();
-
-                    b.ToTable("AppVersions");
                 });
 
             modelBuilder.Entity("YourChores.Data.Models.ApplicationUser", b =>

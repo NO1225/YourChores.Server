@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace YourChores.Data.Migrations
+namespace YourChores.Relational.MSSQL.Migrations
 {
     public partial class Fixingatyponintheownercolumninroomusertable : Migration
     {

@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YourChores.Data.DataAccess;
 
-namespace YourChores.Data.Migrations
+namespace YourChores.Relational.MSSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200601195115_fnishing the database")]
-    partial class fnishingthedatabase
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,6 +150,40 @@ namespace YourChores.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("YourChores.Data.Models.AppVersion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DownloadURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(700)")
+                        .HasMaxLength(700);
+
+                    b.Property<int>("LowestAllowedVersion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(700)")
+                        .HasMaxLength(700);
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Version")
+                        .IsUnique();
+
+                    b.ToTable("AppVersions");
+                });
+
             modelBuilder.Entity("YourChores.Data.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -238,12 +270,19 @@ namespace YourChores.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NormalizedRoomName")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("RoomName")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NormalizedRoomName")
+                        .IsUnique()
+                        .HasFilter("[NormalizedRoomName] IS NOT NULL");
 
                     b.HasIndex("RoomName")
                         .IsUnique();
@@ -293,7 +332,7 @@ namespace YourChores.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("Owener")
+                    b.Property<bool>("Owner")
                         .HasColumnType("bit");
 
                     b.Property<int>("RoomId")
@@ -439,7 +478,7 @@ namespace YourChores.Data.Migrations
                         .HasForeignKey("DoerId");
 
                     b.HasOne("YourChores.Data.Models.Room", "Room")
-                        .WithMany()
+                        .WithMany("ToDoItems")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using YourChores.Data.DataAccess;
 
-namespace YourChores.Data.Migrations
+namespace YourChores.Relational.MSSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200523104527_initial migration")]
-    partial class initialmigration
+    [Migration("20200601195115_fnishing the database")]
+    partial class fnishingthedatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -225,6 +225,132 @@ namespace YourChores.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("YourChores.Data.Models.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("AllowMembersToPost")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RoomName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomName")
+                        .IsUnique();
+
+                    b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("YourChores.Data.Models.RoomJoinRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Declined")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("JoinRequestType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RoomJoinRequests");
+                });
+
+            modelBuilder.Entity("YourChores.Data.Models.RoomUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Owener")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RoomUsers");
+                });
+
+            modelBuilder.Entity("YourChores.Data.Models.ToDoItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(700)")
+                        .HasMaxLength(700);
+
+                    b.Property<string>("DoerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("DoingTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Done")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Urgency")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoerId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("ToDoItems");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -272,6 +398,49 @@ namespace YourChores.Data.Migrations
                     b.HasOne("YourChores.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("YourChores.Data.Models.RoomJoinRequest", b =>
+                {
+                    b.HasOne("YourChores.Data.Models.Room", "Room")
+                        .WithMany("RoomJoinRequests")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("YourChores.Data.Models.ApplicationUser", "User")
+                        .WithMany("RoomJoinRequests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("YourChores.Data.Models.RoomUser", b =>
+                {
+                    b.HasOne("YourChores.Data.Models.Room", "Room")
+                        .WithMany("RoomUsers")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("YourChores.Data.Models.ApplicationUser", "User")
+                        .WithMany("RoomUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("YourChores.Data.Models.ToDoItem", b =>
+                {
+                    b.HasOne("YourChores.Data.Models.ApplicationUser", "Doer")
+                        .WithMany()
+                        .HasForeignKey("DoerId");
+
+                    b.HasOne("YourChores.Data.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

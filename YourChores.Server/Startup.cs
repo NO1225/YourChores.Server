@@ -47,31 +47,22 @@ namespace YourChores.Server
         public void ConfigureServices(IServiceCollection services)
         {
 
-            string hostServer = _configuration["HOST_SERVER"] ?? "(localdb)\\MSSQLLocalDB";
-            string serverPort = _configuration["HOST_PORT"] ?? "1433";
-            string databaseName = _configuration["DATABASE_NAME"] ?? "YourChoresDb";
-            string userName = _configuration["USERNAME"];
-            string passward = _configuration["SA_PASSWORD"];
-
-            string connectionString;
-
-            if(string.IsNullOrEmpty(userName)||string.IsNullOrEmpty(passward))
-            {
-                connectionString = _configuration.GetConnectionString("Default");
-            }
-            else
-            {
-                connectionString = $"Server={hostServer},{serverPort};Database={databaseName};User Id={userName};Password={passward};";
-            }
+            ////Add the database with the deault connection string
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //{
+            //    options.UseSqlServer(GetConnectionStringSqlServer(),b=>b.MigrationsAssembly("YourChores.Relational.MSSQL"));
+            //});
 
             // Add the database with the deault connection string
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(connectionString);
+                options.UseMySql(GetConnectionStringMySQL(), b=>b.MigrationsAssembly("YourChores.Relational.MySQL"));
+
+
             });
 
             // Adding the idintity (login/register)
-            services.AddIdentity<ApplicationUser,IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 // Store it in this database
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 // We are going to use token for authorization
@@ -122,7 +113,7 @@ namespace YourChores.Server
                 };
 
                 // Adding the bearer token authentaction option to the ui
-                options.AddSecurityDefinition("Bearer", securitySchema );
+                options.AddSecurityDefinition("Bearer", securitySchema);
 
                 // use the token provided with the endpoints call
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -136,6 +127,7 @@ namespace YourChores.Server
 
             services.AddControllers();
         }
+
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -182,6 +174,8 @@ namespace YourChores.Server
             EnsureAdminCreated(serviceProvider).GetAwaiter().GetResult();
         }
 
+        #region Helper Methods
+
         private async Task EnsureAdminCreated(IServiceProvider serviceProvider)
         {
             var context = serviceProvider.GetService<ApplicationDbContext>();
@@ -203,7 +197,7 @@ namespace YourChores.Server
 
             // Ensure that we have an admin user
             var adminUser = await userManager.FindByNameAsync("appAdmin");
-            if(adminUser==null)
+            if (adminUser == null)
             {
                 var newAdminUser = new ApplicationUser()
                 {
@@ -214,5 +208,50 @@ namespace YourChores.Server
                 await userManager.CreateAsync(newAdminUser, "123123123");
             }
         }
+
+        private string GetConnectionStringMySQL()
+        {
+            string hostServer = _configuration["MYSQL_SERVICE_HOST"] ?? "localhost";
+            string serverPort = _configuration["MYSQL_SERVICE_PORT"] ?? "3306";
+            string databaseName = _configuration["MYSQL_DATABASE"] ?? "YourChoresDb1";
+            string userName = _configuration["MYSQL_USER"] ?? "root";
+            string passward = _configuration["MYSQL_PASSWORD"] ?? "";
+
+            string connectionString;
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                connectionString = _configuration.GetConnectionString("Default");
+            }
+            else
+            {
+                connectionString = $"Server={hostServer};Port={serverPort};Database={databaseName};Uid={userName};Pwd={passward};";
+            }
+
+            return connectionString;
+        }
+
+        private string GetConnectionStringSqlServer()
+        {
+            string hostServer = _configuration["HOST_SERVER"] ?? "(localdb)\\MSSQLLocalDB";
+            string serverPort = _configuration["HOST_PORT"] ?? "1433";
+            string databaseName = _configuration["DATABASE_NAME"] ?? "YourChoresDb";
+            string userName = _configuration["USERNAME"];
+            string passward = _configuration["SA_PASSWORD"];
+
+            string connectionString;
+
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(passward))
+            {
+                connectionString = _configuration.GetConnectionString("Default");
+            }
+            else
+            {
+                connectionString = $"Server={hostServer},{serverPort};Database={databaseName};User Id={userName};Password={passward};";
+            }
+
+            return connectionString;
+        } 
+        #endregion
     }
 }
