@@ -4,6 +4,21 @@
         <name>YourChores.Server</name>
     </assembly>
     <members>
+        <member name="T:YourChores.Server.APIModels.AcceptInvitationAPIModel">
+            <summary>
+            API Model for the user to accept the invitation to join a room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.AcceptInvitationAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.AcceptInvitationAPIModel.Request.JoinRequestId">
+            <summary>
+            The id of the join rquest
+            </summary>
+        </member>
         <member name="T:YourChores.Server.APIModels.AcceptRequestAPIModel">
             <summary>
             API Model for the Kicking a member outside the room
@@ -127,6 +142,21 @@
             </summary>
         </member>
         <member name="P:YourChores.Server.APIModels.CancelInvitaionAPIModel.Request.JoinRequestId">
+            <summary>
+            The id of the join rquest
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.CancelRequestAPIModel">
+            <summary>
+            API Model for the users to cancel a sent request to a room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.CancelRequestAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.CancelRequestAPIModel.Request.JoinRequestId">
             <summary>
             The id of the join rquest
             </summary>
@@ -298,6 +328,41 @@
         <member name="P:YourChores.Server.APIModels.CreateRoomAPIModel.Response.AllowMembersToPost">
             <summary>
             if the created room allow members to post
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.DeclineInvitationAPIModel">
+            <summary>
+            API Model for the declining an invitation
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.DeclineInvitationAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.DeclineInvitationAPIModel.Request.JoinRequestId">
+            <summary>
+            The id of the join rquest
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.DeclineRequestAPIModel">
+            <summary>
+            API Model for the declining a join request
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.DeclineRequestAPIModel.Request">
+            <summary>
+            The request model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.DeclineRequestAPIModel.Request.RoomId">
+            <summary>
+            The id of the room we are managing
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.DeclineRequestAPIModel.Request.JoinRequestId">
+            <summary>
+            The id of the join rquest
             </summary>
         </member>
         <member name="T:YourChores.Server.APIModels.DemoteOwnerAPIModel">
@@ -691,6 +756,51 @@
         <member name="P:YourChores.Server.APIModels.RoomAPIModel.SearchRoomResponse.IsInvited">
             <summary>
             If there is already an invite from this room
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RoomJoinRequestAPIModel">
+            <summary>
+            API Model for the rooms end point
+            </summary>
+        </member>
+        <member name="T:YourChores.Server.APIModels.RoomJoinRequestAPIModel.Response">
+            <summary>
+            The response model
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomJoinRequestAPIModel.Response.JoinRequestId">
+            <summary>
+            The id of the join request
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomJoinRequestAPIModel.Response.UserId">
+            <summary>
+            The id of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomJoinRequestAPIModel.Response.FirstName">
+            <summary>
+            The first name of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomJoinRequestAPIModel.Response.LastName">
+            <summary>
+            The last name of the member
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomJoinRequestAPIModel.Response.RoomId">
+            <summary>
+            The id of the room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomJoinRequestAPIModel.Response.RoomName">
+            <summary>
+            The name of the room
+            </summary>
+        </member>
+        <member name="P:YourChores.Server.APIModels.RoomJoinRequestAPIModel.Response.JoinRequestType">
+            <summary>
+            The type of this join request
             </summary>
         </member>
         <member name="T:YourChores.Server.APIModels.SearchMemberAPIModel">
@@ -1088,6 +1198,41 @@
         <member name="M:YourChores.Server.Controllers.RoomsController.CancelInvitaion(YourChores.Server.APIModels.CancelInvitaionAPIModel.Request)">
             <summary>
             End point to allow the owners of the room to cancel sent requests
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.DeclineRequest(YourChores.Server.APIModels.DeclineRequestAPIModel.Request)">
+            <summary>
+            End point to allow the owners of the room to decline room join request
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.AcceptInvitation(YourChores.Server.APIModels.AcceptInvitationAPIModel.Request)">
+            <summary>
+            End point to allow the users to accept an invitation to join a room
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.CancelRequest(YourChores.Server.APIModels.CancelRequestAPIModel.Request)">
+            <summary>
+            End point to allow the owners of the room to cancel sent requests
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.DeclineInvitation(YourChores.Server.APIModels.DeclineInvitationAPIModel.Request)">
+            <summary>
+            End point to allow the owners of the room to decline room join request
+            </summary>
+            <param name="requestModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.Controllers.RoomsController.GetMyRequests">
+            <summary>
+            End point to allow the owners of the room to decline room join request
             </summary>
             <param name="requestModel"></param>
             <returns></returns>
