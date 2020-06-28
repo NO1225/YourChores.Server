@@ -1,22 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
+using System.Threading.Tasks;
 using YourChores.Data.DataAccess;
 using YourChores.Data.Models;
 using YourChores.Server.Authentication;
@@ -56,7 +48,7 @@ namespace YourChores.Server
             // Add the database with the deault connection string
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseMySql(GetConnectionStringMySQL(), b=>b.MigrationsAssembly("YourChores.Relational.MySQL"));
+                options.UseMySql(GetConnectionStringMySQL(), b => b.MigrationsAssembly("YourChores.Relational.MySQL"));
 
 
             });
@@ -152,7 +144,7 @@ namespace YourChores.Server
             app.UseAuthorization();
 
             // If is in development
-            if(true||env.IsDevelopment())
+            if (true || env.IsDevelopment())
             {
                 // Use swagger
                 app.UseSwagger();
@@ -206,7 +198,18 @@ namespace YourChores.Server
                 };
 
                 await userManager.CreateAsync(newAdminUser, "123123123");
+
+                await userManager.AddToRoleAsync(newAdminUser, "admin");
             }
+            else
+            {
+                if (!(await userManager.IsInRoleAsync(adminUser, "admin")))
+                {
+                    await userManager.AddToRoleAsync(adminUser, "admin");
+                }
+            }
+
+
         }
 
         private string GetConnectionStringMySQL()
@@ -251,7 +254,7 @@ namespace YourChores.Server
             }
 
             return connectionString;
-        } 
+        }
         #endregion
     }
 }
