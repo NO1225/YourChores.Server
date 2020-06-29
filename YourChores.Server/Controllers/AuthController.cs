@@ -123,7 +123,7 @@ namespace YourChores.Server.Controllers
             if (user == null)
             {
                 // Assigning the error and return
-                responseModel.AddError("Passward Doesn't Match");
+                responseModel.AddError("كلمة المرور لا تطابق الحساب");
                 return responseModel;
             }
 
@@ -145,7 +145,7 @@ namespace YourChores.Server.Controllers
             }
 
             // If the attempt was a failure, return an error
-            responseModel.AddError("Passward Doesn't Match");
+            responseModel.AddError("كلمة المرور لا تطابق الحساب");
 
             return responseModel;
         }

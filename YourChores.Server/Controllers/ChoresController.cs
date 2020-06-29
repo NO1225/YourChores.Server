@@ -71,7 +71,7 @@ namespace YourChores.Server.Controllers
 
             if(room == null)
             {
-                responseModel.AddError("You don't have premession to post here ");
+                responseModel.AddError("ليس لديك الصلاحية للنشر");
 
                 return responseModel;
             }
@@ -121,7 +121,8 @@ namespace YourChores.Server.Controllers
                 // Join on users
                 .ThenInclude(roomUser => roomUser.User)
                 // Select the rooms this user is member of
-                .Where(toDoItem => toDoItem.Room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id))
+                .Where(toDoItem => (!toDoItem.Done) 
+                && toDoItem.Room.RoomUsers.Select(roomUser => roomUser.User.Id).Contains(user.Id))
                 // Convert the rooms to the response format
                 .Select(toDoItem =>
                 new ChoreAPIModel.Response()
@@ -165,7 +166,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (room == null)
             {
-                responseModel.AddError("Invlid room Id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 // Return the response
                 return responseModel;
@@ -178,7 +179,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (chore == null)
             {
-                responseModel.AddError("Invlid chore Id");
+                responseModel.AddError("رقم الواجب غير صحيح");
 
                 // Return the response
                 return responseModel;

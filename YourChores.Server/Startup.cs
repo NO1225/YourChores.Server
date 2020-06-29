@@ -11,7 +11,9 @@ using System;
 using System.Threading.Tasks;
 using YourChores.Data.DataAccess;
 using YourChores.Data.Models;
+using YourChores.Relational.MySQL.Setup;
 using YourChores.Server.Authentication;
+using YourChores.Server.OpenAPI;
 
 namespace YourChores.Server
 {
@@ -40,23 +42,17 @@ namespace YourChores.Server
         {
 
             ////Add the database with the deault connection string
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //{
-            //    options.UseSqlServer(GetConnectionStringSqlServer(),b=>b.MigrationsAssembly("YourChores.Relational.MSSQL"));
-            //});
+            //services.AddMSSQLDBContext(_configuration);
 
             // Add the database with the deault connection string
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseMySql(GetConnectionStringMySQL(), b => b.MigrationsAssembly("YourChores.Relational.MySQL"));
-
-
-            });
+            services.AddMySQLDBContext(_configuration);
 
             // Adding the idintity (login/register)
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 // Store it in this database
                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                // Custome error dexriper with chosen language
+                .AddErrorDescriber<CustomIdentityErrorDescriber>()
                 // We are going to use token for authorization
                 .AddDefaultTokenProviders();
 
@@ -77,45 +73,8 @@ namespace YourChores.Server
                 options.User.RequireUniqueEmail = true;
             });
 
-            // Adding swagger to our server
-            services.AddSwaggerGen(options =>
-            {
-                // Adding swagger document
-                options.SwaggerDoc("v1.0", new OpenApiInfo() { Title = "Main API v1.0", Version = "v1.0" });
-
-                // To use unique names with the requests and responses
-                options.CustomSchemaIds(x => x.FullName);
-
-                // Include the comments that we wrote in the documentation
-                options.IncludeXmlComments("YourChores.Server.xml");
-
-                // Defining the security schema
-                var securitySchema = new OpenApiSecurityScheme()
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                };
-
-                // Adding the bearer token authentaction option to the ui
-                options.AddSecurityDefinition("Bearer", securitySchema);
-
-                // use the token provided with the endpoints call
-                options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    { securitySchema, new[] { "Bearer" } }
-                });
-
-            });
-
-
+            // Adding swagger implementation
+            services.AddSwagger();
 
             services.AddControllers();
         }
@@ -146,16 +105,7 @@ namespace YourChores.Server
             // If is in development
             if (true || env.IsDevelopment())
             {
-                // Use swagger
-                app.UseSwagger();
-
-                // Add swagger UI
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1.0/swagger.json", "Versioned API v1.0");
-
-                    c.DocExpansion(DocExpansion.None);
-                });
+                app.ConfigureSwagger();
             }
 
             app.UseEndpoints(endpoints =>
@@ -212,49 +162,6 @@ namespace YourChores.Server
 
         }
 
-        private string GetConnectionStringMySQL()
-        {
-            string hostServer = _configuration["MYSQL_SERVICE_HOST"] ?? "localhost";
-            string serverPort = _configuration["MYSQL_SERVICE_PORT"] ?? "3306";
-            string databaseName = _configuration["MYSQL_DATABASE"] ?? "YourChoresDb1";
-            string userName = _configuration["MYSQL_USER"] ?? "root";
-            string passward = _configuration["MYSQL_PASSWORD"] ?? "";
-
-            string connectionString;
-
-            if (string.IsNullOrEmpty(userName))
-            {
-                connectionString = _configuration.GetConnectionString("Default");
-            }
-            else
-            {
-                connectionString = $"Server={hostServer};Port={serverPort};Database={databaseName};Uid={userName};Pwd={passward};";
-            }
-
-            return connectionString;
-        }
-
-        private string GetConnectionStringSqlServer()
-        {
-            string hostServer = _configuration["HOST_SERVER"] ?? "(localdb)\\MSSQLLocalDB";
-            string serverPort = _configuration["HOST_PORT"] ?? "1433";
-            string databaseName = _configuration["DATABASE_NAME"] ?? "YourChoresDb";
-            string userName = _configuration["USERNAME"];
-            string passward = _configuration["SA_PASSWORD"];
-
-            string connectionString;
-
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(passward))
-            {
-                connectionString = _configuration.GetConnectionString("Default");
-            }
-            else
-            {
-                connectionString = $"Server={hostServer},{serverPort};Database={databaseName};User Id={userName};Password={passward};";
-            }
-
-            return connectionString;
-        }
         #endregion
     }
 }

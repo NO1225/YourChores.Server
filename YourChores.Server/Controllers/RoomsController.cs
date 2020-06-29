@@ -70,7 +70,7 @@ namespace YourChores.Server.Controllers
             // Check for the number of rooms the current is in
             if (_context.RoomUsers.Include(roomUser => roomUser.User).Where(roomUser => roomUser.User.Id == user.Id).Count() >= MAX_USER_ROOMS)
             {
-                responseModel.AddError($"Maximum room number reached {MAX_USER_ROOMS}, leave a room to be able to create a new one");
+                responseModel.AddError($"تم الوصول ل اقصى عدد من الغرف للمستخدم {MAX_USER_ROOMS}, يرجى مغادرة غرفة لاتاحة المجال لعمل غرفة جديدة");
 
                 return responseModel;
             }
@@ -79,7 +79,7 @@ namespace YourChores.Server.Controllers
             // Check for the duplication in room name
             if (await _context.Rooms.FirstOrDefaultAsync(room => room.NormalizedRoomName == normalizedRoomName) != null)
             {
-                responseModel.AddError("The name is already in use, please select another name");
+                responseModel.AddError("اسم الغرفة مستعمل مسبقا، يرجى المحالة باسم اخر");
 
                 return responseModel;
             }
@@ -364,7 +364,7 @@ namespace YourChores.Server.Controllers
             // Check if the room id is valid
             if (room == null)
             {
-                responseModel.AddError("Room not found");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 return responseModel;
             }
@@ -378,7 +378,7 @@ namespace YourChores.Server.Controllers
                 // Check if the user has already joined this room
                 .Any(roomUser => roomUser.Room.Id == requestModel.RoomId && roomUser.User.Id == user.Id))
             {
-                responseModel.AddError("You already joined this room");
+                responseModel.AddError("انت بالفعل عضو في هذه الغرفة");
 
                 return responseModel;
             }
@@ -392,7 +392,7 @@ namespace YourChores.Server.Controllers
                 // Check if the user has a;ready sent a join request to this room
                 .Any(roomJoinRequest => roomJoinRequest.Room.Id == requestModel.RoomId && roomJoinRequest.User.Id == user.Id && roomJoinRequest.JoinRequestType == JoinRequestType.Join))
             {
-                responseModel.AddError("You already sent a request to this room");
+                responseModel.AddError("لقد قمت مسبقا بارسال طلب لهذه الغرفة");
 
                 return responseModel;
             }
@@ -436,7 +436,7 @@ namespace YourChores.Server.Controllers
             // Check for the number of rooms the current is in
             if (_context.RoomUsers.Include(roomUser => roomUser.User).Where(roomUser => roomUser.User.Id == user.Id).Count() >= MAX_USER_ROOMS)
             {
-                responseModel.AddError($"Maximum room number reached {MAX_USER_ROOMS}, leave a room to be able to create a new one");
+                responseModel.AddError($"تم الوصول ل اقصى عدد من الغرف للمستخدم {MAX_USER_ROOMS}, يرجى مغادرة غرفة لاتاحة المجال لعمل غرفة جديدة");
 
                 return responseModel;
             }
@@ -444,7 +444,7 @@ namespace YourChores.Server.Controllers
             // Check for the number of member in the passed room
             if (_context.RoomUsers.Include(roomUser => roomUser.Room).Where(roomUser => roomUser.Room.Id == requestModel.RoomId).Count() >= MAX_ROOM_USERS)
             {
-                responseModel.AddError($"Maximum room members reached {MAX_ROOM_USERS}, wait until a member leaves so that you can enter");
+                responseModel.AddError($"تم الوصول ل اقصى عدد من الاعضاء بالغرفة {MAX_ROOM_USERS}, انتظر حتى خروج عضو لاتاحة المجال لك");
 
                 return responseModel;
             }
@@ -486,7 +486,7 @@ namespace YourChores.Server.Controllers
             // Check if the room id is valid
             if (invitedUser == null)
             {
-                responseModel.AddError("Invalid user id");
+                responseModel.AddError("رقم المستخدم غير صحيح");
 
                 return responseModel;
             }
@@ -501,7 +501,7 @@ namespace YourChores.Server.Controllers
             // Check if the room id is valid
             if (roomUser == null)
             {
-                responseModel.AddError("Invalid room id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 return responseModel;
             }
@@ -516,7 +516,7 @@ namespace YourChores.Server.Controllers
                 // Check if the user has already joined this room
                 .Any(roomUser => roomUser.Room.Id == requestModel.RoomId && roomUser.User.Id == requestModel.UserId))
             {
-                responseModel.AddError("The user is already a member of this room");
+                responseModel.AddError("المستخدم عضو في هذه الغرفة");
 
                 return responseModel;
             }
@@ -560,7 +560,7 @@ namespace YourChores.Server.Controllers
                 // Check if the user has a;ready sent a join request to this room
                 .Any(roomJoinRequest => roomJoinRequest.Room.Id == requestModel.RoomId && roomJoinRequest.User.Id == requestModel.UserId && roomJoinRequest.JoinRequestType == JoinRequestType.Invite))
             {
-                responseModel.AddError("You already sent an invitation to this user");
+                responseModel.AddError("لقد قمت بارسال دعوة مسبقا لهذا المستخدم");
 
                 return responseModel;
             }
@@ -568,7 +568,7 @@ namespace YourChores.Server.Controllers
             // Check for the number of rooms the current is in
             if (_context.RoomUsers.Include(roomUser => roomUser.User).Where(roomUser => roomUser.User.Id == requestModel.UserId).Count() >= MAX_USER_ROOMS)
             {
-                responseModel.AddError($"Maximum room number reached {MAX_USER_ROOMS} for the user!");
+                responseModel.AddError($"تم الوصول لاقصى عدد من الغرف {MAX_USER_ROOMS} لهذا المستخدم!");
 
                 return responseModel;
             }
@@ -576,7 +576,7 @@ namespace YourChores.Server.Controllers
             // Check for the number of member in the passed room
             if (_context.RoomUsers.Include(roomUser => roomUser.Room).Where(roomUser => roomUser.Room.Id == requestModel.RoomId).Count() >= MAX_ROOM_USERS)
             {
-                responseModel.AddError($"Maximum room members reached {MAX_ROOM_USERS}, wait until a member leaves so that you can invite");
+                responseModel.AddError($"تم الوصول ل اقصى عدد من المستخدمين لهذه الغرفة {MAX_ROOM_USERS}, انتظر حتى خروج اي عضو لاتاحة المجال");
 
                 return responseModel;
             }
@@ -621,7 +621,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (room == null)
             {
-                responseModel.AddError("Invlid room Id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 return responseModel;
             }
@@ -639,7 +639,7 @@ namespace YourChores.Server.Controllers
 
                 if (alternativeRoomUser == null)
                 {
-                    responseModel.AddError("You are the last owner of this room, please provide the alternative user Id");
+                    responseModel.AddError("انت اخر مالك لهذه الغرفة، يجب تحديد عضو بديل لتتمكن من المغادرة");
 
                     return responseModel;
                 }
@@ -692,7 +692,7 @@ namespace YourChores.Server.Controllers
 
             if (user.Id == requestModel.UserId)
             {
-                responseModel.AddError("You can't kick yourself");
+                responseModel.AddError("لا يمكنك طرد نفسك");
 
                 // Return the response
                 return responseModel;
@@ -711,7 +711,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (room == null)
             {
-                responseModel.AddError("Invlid room Id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 // Return the response
                 return responseModel;
@@ -722,7 +722,7 @@ namespace YourChores.Server.Controllers
 
             if (roomUser == null)
             {
-                responseModel.AddError("The user is not a member of this room");
+                responseModel.AddError("هذا المستخدم ليس عضوا في هذه الغرفة");
 
                 // Return the response
                 return responseModel;
@@ -763,7 +763,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (room == null)
             {
-                responseModel.AddError("Invlid room Id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 // Return the response
                 return responseModel;
@@ -796,7 +796,7 @@ namespace YourChores.Server.Controllers
 
             if (user.Id == requestModel.UserId)
             {
-                responseModel.AddError("You can't promote yourself");
+                responseModel.AddError("لا تستطيع ترفيع نفسك");
 
                 // Return the response
                 return responseModel;
@@ -815,7 +815,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (room == null)
             {
-                responseModel.AddError("Invlid room Id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 // Return the response
                 return responseModel;
@@ -826,7 +826,7 @@ namespace YourChores.Server.Controllers
 
             if (roomUser == null)
             {
-                responseModel.AddError("The user is not a member of this room");
+                responseModel.AddError("هذا المستخدم ليس عضوا في هذه الغرفة");
 
                 // Return the response
                 return responseModel;
@@ -869,7 +869,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (room == null)
             {
-                responseModel.AddError("Invlid room Id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 // Return the response
                 return responseModel;
@@ -880,7 +880,7 @@ namespace YourChores.Server.Controllers
 
             if (roomUser == null)
             {
-                responseModel.AddError("The user is not an owner for this room");
+                responseModel.AddError("هذا العضو ليس مالكا للغرفة");
 
                 // Return the response
                 return responseModel;
@@ -889,7 +889,7 @@ namespace YourChores.Server.Controllers
             // Check if the user we are going to demote is the last owner of this room (by default, it's the logged in user)
             if(roomUser.User.Id == user.Id && room.RoomUsers.Where(roomUser=>roomUser.Owner).Count()==1)
             {
-                responseModel.AddError("You are the last owner of this room, you can't demote yourself");
+                responseModel.AddError("انت اخر مالك بهذه الغرفة، لا يمكنك تهبيط نفسك");
 
                 // Return the response
                 return responseModel;
@@ -935,7 +935,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (room == null)
             {
-                responseModel.AddError("Invlid room Id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 // Return the response
                 return responseModel;
@@ -988,7 +988,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (room == null)
             {
-                responseModel.AddError("Invlid room Id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 // Return the response
                 return responseModel;
@@ -999,7 +999,7 @@ namespace YourChores.Server.Controllers
 
             if (joinRequest == null)
             {
-                responseModel.AddError("This is not a join request");
+                responseModel.AddError("هذا ليس طلب انضمام");
 
                 // Return the response
                 return responseModel;
@@ -1049,7 +1049,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (room == null)
             {
-                responseModel.AddError("Invlid room Id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 // Return the response
                 return responseModel;
@@ -1063,7 +1063,7 @@ namespace YourChores.Server.Controllers
 
             if (joinRequest == null)
             {
-                responseModel.AddError("This is not a join request");
+                responseModel.AddError("هذا ليس طلب انضمام");
 
                 // Return the response
                 return responseModel;
@@ -1105,7 +1105,7 @@ namespace YourChores.Server.Controllers
             // Checck if the user is a member of this room and the room exist
             if (room == null)
             {
-                responseModel.AddError("Invlid room Id");
+                responseModel.AddError("رقم الغرفة غير صحيح");
 
                 // Return the response
                 return responseModel;
@@ -1116,7 +1116,7 @@ namespace YourChores.Server.Controllers
 
             if (joinRequest == null)
             {
-                responseModel.AddError("This is not a join request");
+                responseModel.AddError("هذا ليس طلب انضمام");
 
                 // Return the response
                 return responseModel;
@@ -1156,7 +1156,7 @@ namespace YourChores.Server.Controllers
 
             if (joinRequest == null)
             {
-                responseModel.AddError("This is not a join request");
+                responseModel.AddError("هذا ليس طلب انضمام");
 
                 // Return the response
                 return responseModel;
@@ -1203,7 +1203,7 @@ namespace YourChores.Server.Controllers
 
             if (joinRequest == null)
             {
-                responseModel.AddError("This is not a join request");
+                responseModel.AddError("هذا ليس طلب انضمام");
 
                 // Return the response
                 return responseModel;
@@ -1242,7 +1242,7 @@ namespace YourChores.Server.Controllers
 
             if (joinRequest == null)
             {
-                responseModel.AddError("This is not a join request");
+                responseModel.AddError("هذا ليس طلب انضمام");
 
                 // Return the response
                 return responseModel;

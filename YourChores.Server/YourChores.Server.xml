@@ -1237,6 +1237,26 @@
             <param name="requestModel"></param>
             <returns></returns>
         </member>
+        <member name="T:YourChores.Server.OpenAPI.AddSwaggerImplementation">
+            <summary>
+            Swagger setup
+            </summary>
+        </member>
+        <member name="M:YourChores.Server.OpenAPI.AddSwaggerImplementation.AddSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configure the toekn authentication
+            </summary>
+            <param name="services">Service colleciton</param>
+            <param name="config">Congigeration of the API</param>
+            <returns></returns>
+        </member>
+        <member name="M:YourChores.Server.OpenAPI.AddSwaggerImplementation.ConfigureSwagger(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            To configure the UI of the open api
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+        </member>
         <member name="T:YourChores.Server.Program">
             <summary>
             The entry class of the application
