@@ -25,6 +25,8 @@ namespace YourChores.Server
 
         private readonly IConfiguration _configuration;
 
+        private readonly string corsPolicy = "AllowOrigins";
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -76,6 +78,16 @@ namespace YourChores.Server
             // Adding swagger implementation
             services.AddSwagger();
 
+            // Adding Cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy(corsPolicy,
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin();
+                    });
+            });
+
             services.AddControllers();
         }
 
@@ -85,6 +97,7 @@ namespace YourChores.Server
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
+        /// <param name="serviceProvider"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
@@ -107,6 +120,9 @@ namespace YourChores.Server
             {
                 app.ConfigureSwagger();
             }
+
+            // Adding Cors
+            app.UseCors(corsPolicy);
 
             app.UseEndpoints(endpoints =>
             {
