@@ -85,6 +85,8 @@ namespace YourChores.Server
                     builder =>
                     {
                         builder.AllowAnyOrigin();
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
                     });
             });
 
