@@ -34,7 +34,7 @@ services:
       - URL=yourchores.me
       - SUBDOMAINS=www,
       - VALIDATION=http
-      - STAGING=true #optional
+      - STAGING=false #optional
     volumes:
       - ./nginx/config:/config
       - ./nginx/nginx.conf:/config/nginx/site-confs/default
