@@ -12,8 +12,6 @@ services:
     build:
       context: .
       dockerfile: YourChores.Server/Dockerfile
-    ports:
-      - "8080:8080"
     depends_on:
       - db
   db:
@@ -26,5 +24,24 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
     restart: always
+  nginx:
+    image: linuxserver/letsencrypt
+    container_name: nginx
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - URL=yourchores.me
+      - SUBDOMAINS=www,
+      - VALIDATION=http
+      - STAGING=true #optional
+    volumes:
+      - ./nginx/config:/config
+      - ./nginx/nginx.conf:/config/nginx/site-confs/default
+      - ./nginx/ssl.conf:/config/nginx/ssl.conf
+    ports:
+      - 443:443
+      - 80:80 #optional
+    restart: unless-stopped
 volumes:
   dbdata:

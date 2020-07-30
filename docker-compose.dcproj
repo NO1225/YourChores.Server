@@ -14,5 +14,10 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="nginx\ssl.conf" />
+    <None Include="nginx\nginx.conf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="nginx\config\" />
   </ItemGroup>
 </Project>
