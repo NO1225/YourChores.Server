@@ -31,8 +31,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - URL=yourchores.me
-      - SUBDOMAINS=www,
+      - URL=api.yourchores.me
       - VALIDATION=http
       - STAGING=false #optional
     volumes:
