@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace YourChores.Server.APIModels
 {
     /// <summary>
-    /// The api model for changin the password
+    /// The api model for changin the passward
     /// </summary>
-    public class ChangePasswordAPIModel
+    public class ChangePasswardAPIModel
     {
         /// <summary>
         /// The request model
@@ -17,16 +17,16 @@ namespace YourChores.Server.APIModels
         public class Request
         {
             /// <summary>
-            /// The old password
+            /// The old passward
             /// </summary>
             [Required]
-            public string OldPassword { get; set; }
+            public string OldPassward { get; set; }
 
             /// <summary>
-            /// The new password
+            /// The new passward
             /// </summary>
             [Required]
-            public string NewPassword { get; set; }
+            public string NewPassward { get; set; }
         }
 
 

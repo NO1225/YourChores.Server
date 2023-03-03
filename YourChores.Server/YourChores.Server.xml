@@ -183,24 +183,24 @@
             </summary>
             <example>lastName</example>
         </member>
-        <member name="T:YourChores.Server.APIModels.ChangePasswordAPIModel">
+        <member name="T:YourChores.Server.APIModels.ChangePasswardAPIModel">
             <summary>
-            The api model for changin the password
+            The api model for changin the passward
             </summary>
         </member>
-        <member name="T:YourChores.Server.APIModels.ChangePasswordAPIModel.Request">
+        <member name="T:YourChores.Server.APIModels.ChangePasswardAPIModel.Request">
             <summary>
             The request model
             </summary>
         </member>
-        <member name="P:YourChores.Server.APIModels.ChangePasswordAPIModel.Request.OldPassword">
+        <member name="P:YourChores.Server.APIModels.ChangePasswardAPIModel.Request.OldPassward">
             <summary>
-            The old password
+            The old passward
             </summary>
         </member>
-        <member name="P:YourChores.Server.APIModels.ChangePasswordAPIModel.Request.NewPassword">
+        <member name="P:YourChores.Server.APIModels.ChangePasswardAPIModel.Request.NewPassward">
             <summary>
-            The new password
+            The new passward
             </summary>
         </member>
         <member name="T:YourChores.Server.APIModels.ChoreAPIModel">
@@ -479,9 +479,9 @@
             </summary>
             <example>qwer</example>
         </member>
-        <member name="P:YourChores.Server.APIModels.LoginAPIModel.Request.Password">
+        <member name="P:YourChores.Server.APIModels.LoginAPIModel.Request.Passward">
             <summary>
-            The password for loggin in
+            The passward for loggin in
             </summary>
             <example>123123123</example>
         </member>
@@ -542,9 +542,9 @@
             </summary>
             <example>Adam@gmail.com</example>
         </member>
-        <member name="P:YourChores.Server.APIModels.RegisterAPIModel.Request.Password">
+        <member name="P:YourChores.Server.APIModels.RegisterAPIModel.Request.Passward">
             <summary>
-            The password for the new user
+            The passward for the new user
             Must be more than 8 digits
             </summary>
         </member>
@@ -1013,7 +1013,7 @@
         </member>
         <member name="M:YourChores.Server.Controllers.AuthController.Login(YourChores.Server.APIModels.LoginAPIModel.Request)">
             <summary>
-            End point for loggin in using userName/Email with password
+            End point for loggin in using userName/Email with passward
             </summary>
             <param name="requestModel"></param>
             <returns></returns>
@@ -1031,9 +1031,9 @@
             <param name="requestModel"></param>
             <returns></returns>
         </member>
-        <member name="M:YourChores.Server.Controllers.AuthController.ChangePassword(YourChores.Server.APIModels.ChangePasswordAPIModel.Request)">
+        <member name="M:YourChores.Server.Controllers.AuthController.ChangePassward(YourChores.Server.APIModels.ChangePasswardAPIModel.Request)">
             <summary>
-            End point to change the password of the current user
+            End point to change the passward of the current user
             </summary>
             <param name="requestModel"></param>
             <returns></returns>

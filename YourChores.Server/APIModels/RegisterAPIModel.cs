@@ -31,12 +31,12 @@ namespace YourChores.Server.APIModels
             public string Email { get; set; }
 
             /// <summary>
-            /// The password for the new user
+            /// The passward for the new user
             /// Must be more than 8 digits
             /// </summary>
             [Required]
             [MaxLength(50)]
-            public string Password { get; set; }
+            public string Passward { get; set; }
         }
 
         /// <summary>
