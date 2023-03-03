@@ -64,7 +64,7 @@ namespace YourChores.Server
             // Identity options
             services.Configure<IdentityOptions>(options =>
             {
-                // Very weak passward
+                // Very weak password
                 options.Password.RequiredLength = 8;
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;

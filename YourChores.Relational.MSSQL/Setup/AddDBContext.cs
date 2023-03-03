@@ -38,17 +38,17 @@ namespace YourChores.Relational.MSSQL.Setup
             string serverPort = config["HOST_PORT"] ?? "1433";
             string databaseName = config["DATABASE_NAME"] ?? "YourChoresDb";
             string userName = config["USERNAME"];
-            string passward = config["SA_PASSWORD"];
+            string password = config["SA_PASSWORD"];
 
             string connectionString;
 
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(passward))
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
             {
                 connectionString = config.GetConnectionString("Default");
             }
             else
             {
-                connectionString = $"Server={hostServer},{serverPort};Database={databaseName};User Id={userName};Password={passward};";
+                connectionString = $"Server={hostServer},{serverPort};Database={databaseName};User Id={userName};Password={password};";
             }
 
             return connectionString;
