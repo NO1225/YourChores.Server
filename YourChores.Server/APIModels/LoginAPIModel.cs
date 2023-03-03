@@ -22,11 +22,11 @@ namespace YourChores.Server.APIModels
             public string UserNameOrEmail { get; set; }
 
             /// <summary>
-            /// The passward for loggin in
+            /// The password for loggin in
             /// </summary>
             /// <example>123123123</example>
             [Required]
-            public string Passward { get; set; }
+            public string Password { get; set; }
         }
 
         /// <summary>

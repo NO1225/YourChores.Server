@@ -39,7 +39,7 @@ namespace YourChores.Relational.MySQL.Setup
             string serverPort = config["MYSQL_SERVICE_PORT"] ?? "3306";
             string databaseName = config["MYSQL_DATABASE"] ?? "YourChoresDb1";
             string userName = config["MYSQL_USER"] ?? "root";
-            string passward = config["MYSQL_PASSWORD"] ?? "";
+            string password = config["MYSQL_PASSWORD"] ?? "";
 
             string connectionString;
 
@@ -49,7 +49,7 @@ namespace YourChores.Relational.MySQL.Setup
             }
             else
             {
-                connectionString = $"Server={hostServer};Port={serverPort};Database={databaseName};Uid={userName};Pwd={passward};";
+                connectionString = $"Server={hostServer};Port={serverPort};Database={databaseName};Uid={userName};Pwd={password};";
             }
 
             return connectionString;
