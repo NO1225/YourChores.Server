@@ -66,7 +66,7 @@ namespace YourChores.Server.Controllers
             };
 
             // Try to register the new user
-            var result = await _userManager.CreateAsync(user, requestModel.Passward);
+            var result = await _userManager.CreateAsync(user, requestModel.Password);
 
             // If ther was an error
             if (!result.Succeeded)
@@ -93,7 +93,7 @@ namespace YourChores.Server.Controllers
         }
 
         /// <summary>
-        /// End point for loggin in using userName/Email with passward
+        /// End point for loggin in using userName/Email with password
         /// </summary>
         /// <param name="requestModel"></param>
         /// <returns></returns>
@@ -128,7 +128,7 @@ namespace YourChores.Server.Controllers
             }
 
             // if there is a user, attempt to sign in 
-            var result = await _signInManager.PasswordSignInAsync(user, requestModel.Passward, false, false);
+            var result = await _signInManager.PasswordSignInAsync(user, requestModel.Password, false, false);
 
             // If the sign in was successfull
             if (result.Succeeded)
@@ -214,20 +214,20 @@ namespace YourChores.Server.Controllers
         }
 
         /// <summary>
-        /// End point to change the passward of the current user
+        /// End point to change the password of the current user
         /// </summary>
         /// <param name="requestModel"></param>
         /// <returns></returns>
         [HttpPost]
         [Authorize]
-        [Route("ChangePassward")]
-        public async Task<ActionResult<APIResponse>> ChangePassward(ChangePasswardAPIModel.Request requestModel)
+        [Route("ChangePassword")]
+        public async Task<ActionResult<APIResponse>> ChangePassword(ChangePasswordAPIModel.Request requestModel)
         {
             // Get the user
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            // Try to change the passward
-            var result = await _userManager.ChangePasswordAsync(user, requestModel.OldPassward, requestModel.NewPassward);
+            // Try to change the password
+            var result = await _userManager.ChangePasswordAsync(user, requestModel.OldPassword, requestModel.NewPassword);
 
             // Initiate the response
             var responseModel = new APIResponse();
